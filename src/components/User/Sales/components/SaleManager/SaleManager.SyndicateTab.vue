@@ -7,12 +7,8 @@
         </label>
         <ul class="key-value-list">
           <li>
-            <span>Name</span>
-            <span>{{ corporate.name }}</span>
-          </li>
-          <li>
-            <span>Headquarters</span>
-            <span>{{ corporate.headquarters }}</span>
+            <span>Company</span>
+            <span>{{ corporate.company }}</span>
           </li>
           <li v-if="kycAvatarKey">
             <span>Avatar</span>
@@ -22,21 +18,25 @@
               </user-doc-link-getter>
             </span>
           </li>
-          <li>
-            <span>Homepage</span>
-            <span>{{ corporate.homepage }}</span>
+          <li v-if="corporate.headquarters">
+            <span>Headquarters</span>
+            <span>{{ corporate.headquarters }}</span>
           </li>
-          <li>
+          <li v-if="corporate.industry">
             <span>Industry</span>
             <span>{{ corporate.industry }}</span>
           </li>
-          <li>
-            <span>Team size</span>
-            <span>{{ corporate.team_size }}</span>
+          <li v-if="corporate.homepage">
+            <span>Website</span>
+            <span>{{ corporate.homepage }}</span>
           </li>
-          <li>
-            <span>Company</span>
-            <span>{{ corporate.company }}</span>
+          <li v-if="corporate.bank_account">
+            <span>Card number</span>
+            <span>{{ corporate.bank_account }}</span>
+          </li>
+          <li v-if="corporate.invite">
+            <span>Invitation code</span>
+            <span>{{ corporate.invite }}</span>
           </li>
           <li v-if="kycAvatarKey">
             <div class="sale-manager-corporate-tab__doc-view-wrp">
