@@ -48,6 +48,12 @@
               />
             </div>
           </li>
+          <li v-if="corporate.description">
+            <div class="sale-manager-corporate-tab__doc-view-wrp">
+              <h3>Description</h3>
+              <markdown-formatter :source="corporate.description" />
+            </div>
+          </li>
         </ul>
       </div>
     </template>
@@ -68,6 +74,7 @@
 
 <script>
 import { UserDocLinkGetter, UserDocGetter } from '@comcom/getters'
+import { MarkdownFormatter } from '@comcom/formatters'
 
 import _get from 'lodash/get'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -78,6 +85,7 @@ export default {
   components: {
     UserDocLinkGetter,
     UserDocGetter,
+    MarkdownFormatter
   },
 
   props: {

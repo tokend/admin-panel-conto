@@ -40,13 +40,13 @@ export default {
   }
 
   p {
-    margin: 1em 0;
+    margin: 0.5em 0;
   }
 
   ul {
     display: block;
-    margin: 0 0 1em;
-    padding: 0 0 0 4em;
+    margin: 0 0 0.5em;
+    padding: 0 0 0 2em;
 
     & > li {
       list-style-type: disc;
@@ -55,8 +55,8 @@ export default {
 
   ol {
     display: block;
-    margin: 0 0 1em;
-    padding: 0 0 0 4em;
+    margin: 0 0 0.5em;
+    padding: 0 0 0 2em;
 
     & > li {
       list-style-type: decimal;
@@ -73,14 +73,14 @@ export default {
   h2 {
     display: block;
     font-size: 1.5em;
-    margin: 0.83em 0;
+    margin: 0.4em 0;
     font-weight: 300;
   }
 
   h3 {
     display: block;
     font-size: 1.17em;
-    margin: 1em 0;
+    margin: 0.3em 0;
     font-weight: bold;
   }
 
