@@ -85,7 +85,7 @@ export default {
   components: {
     UserDocLinkGetter,
     UserDocGetter,
-    MarkdownFormatter
+    MarkdownFormatter,
   },
 
   props: {
