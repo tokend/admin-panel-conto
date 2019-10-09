@@ -40,8 +40,8 @@
 
             <general-kyc-viewer
               v-if=" request.accountRoleToSet === kvAccountRoles.general"
-              :kyc="kyc"
               :user="user"
+              :blob-id="request.blobId"
             />
             <verified-kyc-viewer
               v-else-if="request.accountRoleToSet === kvAccountRoles.usVerified"

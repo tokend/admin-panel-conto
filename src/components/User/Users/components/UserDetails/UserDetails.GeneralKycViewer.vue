@@ -1,8 +1,8 @@
 <template>
   <div class="user-details-general-kyc-viewer">
     <kyc-general-section
-      :kyc="kyc"
       :user="user"
+      :blob-id="blobId"
     />
   </div>
 </template>
@@ -15,14 +15,15 @@ export default {
     KycGeneralSection,
   },
   props: {
-    kyc: {
-      type: Object,
-      required: true,
-    },
     user: {
       type: Object,
       required: true,
     },
+    blobId: {
+      type: String,
+      required: true,
+    },
+
   },
 }
 </script>

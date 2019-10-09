@@ -56,7 +56,7 @@
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.general
                 "
-                :kyc="kyc"
+                :blob-id="requestToReview.blobId"
                 :user="user" />
               <verified-kyc-viewer
                 v-if="
@@ -101,7 +101,7 @@
               <h2>Previous approved KYC Request</h2>
               <general-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
-                :kyc="kyc"
+                :blob-id="verifiedRequest.blobId"
                 :user="user"
               />
               <verified-kyc-viewer
