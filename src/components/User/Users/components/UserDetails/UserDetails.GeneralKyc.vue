@@ -1,10 +1,10 @@
 <template>
-  <div class="user-details-account">
-    <h3 class="user-details-account__title">
+  <div class="general-kyc">
+    <h3 class="general-kyc__title">
       General user details
     </h3>
     <template v-if="isLoaded">
-      <ul class="user-details-account__key-value-list key-value-list">
+      <ul class="general-kyc__key-value-list key-value-list">
         <li>
           <span>First name</span>
           <span :title="kyc.firstName">
@@ -71,7 +71,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-details-account__title {
+.general-kyc__title {
   margin-bottom: 2rem;
 }
 </style>
