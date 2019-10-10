@@ -38,7 +38,7 @@
               :user-account-id="user.address"
             />
 
-            <general-kyc-viewer
+            <general-kyc
               v-if=" request.accountRoleToSet === kvAccountRoles.general"
               :user="user"
               :blob-id="request.blobId"
@@ -93,7 +93,7 @@ import AccountSection from '@/components/User/Users/components/UserDetails/UserD
 
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
 
-import GeneralKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.GeneralKyc'
+import GeneralKyc from '@/components/User/Users/components/UserDetails/UserDetails.GeneralKyc'
 import VerifiedKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.VerifiedKycViewer'
 import AccreditedKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.AccreditedKycViewer'
 
@@ -115,7 +115,7 @@ export default {
     KycSyndicateSection,
     AccreditedKycViewer,
     VerifiedKycViewer,
-    GeneralKycViewer,
+    GeneralKyc,
     ExternalDetailsViewer,
     QueueRequestDocuments,
   },

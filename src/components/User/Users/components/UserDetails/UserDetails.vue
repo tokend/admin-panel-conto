@@ -52,7 +52,7 @@
         <template v-if="requestToReview.state">
           <section class="user-details__section">
             <template v-if="isKycLoaded">
-              <general-kyc-viewer
+              <general-kyc
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.general
                 "
@@ -99,7 +99,7 @@
           >
             <template v-if="isKycLoaded">
               <h2>Previous approved KYC Request</h2>
-              <general-kyc-viewer
+              <general-kyc
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
                 :blob-id="verifiedRequest.blobId"
                 :user="user"
@@ -197,7 +197,7 @@ import AccountSection from './UserDetails.Account'
 
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
 
-import GeneralKycViewer from './UserDetails.GeneralKyc'
+import GeneralKyc from './UserDetails.GeneralKyc'
 import VerifiedKycViewer from './UserDetails.VerifiedKycViewer'
 import AccreditedKycViewer from './UserDetails.AccreditedKycViewer'
 
@@ -233,7 +233,7 @@ export default {
     BlockActions,
     AccreditedKycViewer,
     VerifiedKycViewer,
-    GeneralKycViewer,
+    GeneralKyc,
   },
 
   props: {

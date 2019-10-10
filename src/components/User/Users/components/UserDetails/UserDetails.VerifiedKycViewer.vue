@@ -1,6 +1,6 @@
 <template>
   <div class="user-details-verified-kyc-viewer">
-    <kyc-general-section
+    <general-kyc
       :blob-id="blobId"
       :user="user"
     />
@@ -8,11 +8,11 @@
 </template>
 
 <script>
-import KycGeneralSection from './UserDetails.GeneralKyc'
+import GeneralKyc from './UserDetails.GeneralKyc'
 
 export default {
   components: {
-    KycGeneralSection,
+    GeneralKyc,
   },
   props: {
     user: {
