@@ -45,7 +45,7 @@
             />
             <verified-kyc-viewer
               v-else-if="request.accountRoleToSet === kvAccountRoles.usVerified"
-              :kyc="kyc"
+              :blob-id="request.blobId"
               :user="user"
             />
             <!-- eslint-disable max-len -->
@@ -53,6 +53,7 @@
               v-else-if="request.accountRoleToSet === kvAccountRoles.usAccredited"
               :kyc="kyc"
               :user="user"
+              :blob-id="request.blobId"
             />
             <!-- eslint-enable max-len -->
             <kyc-syndicate-section
@@ -92,7 +93,7 @@ import AccountSection from '@/components/User/Users/components/UserDetails/UserD
 
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
 
-import GeneralKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.GeneralKycViewer'
+import GeneralKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.GeneralKyc'
 import VerifiedKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.VerifiedKycViewer'
 import AccreditedKycViewer from '@/components/User/Users/components/UserDetails/UserDetails.AccreditedKycViewer'
 

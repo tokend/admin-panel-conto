@@ -22,14 +22,14 @@
     </ul>
 
     <kyc-general-section
-      :kyc="kyc"
+      :blob-id="blobId"
       :user="user"
     />
   </div>
 </template>
 
 <script>
-import KycGeneralSection from './UserDetails.Kyc'
+import KycGeneralSection from './UserDetails.GeneralKyc'
 import { UserDocLinkGetter } from '@comcom/getters'
 
 export default {
@@ -44,6 +44,10 @@ export default {
     },
     user: {
       type: Object,
+      required: true,
+    },
+    blobId: {
+      type: String,
       required: true,
     },
   },

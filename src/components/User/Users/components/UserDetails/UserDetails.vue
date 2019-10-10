@@ -106,13 +106,14 @@
               />
               <verified-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.usVerified"
-                :kyc="kyc"
+                :blob-id="verifiedRequest.blobId"
                 :user="user"
               />
               <accredited-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.usAccredited"
                 :kyc="kyc"
                 :user="user"
+                :blob-id="verifiedRequest.blobId"
               />
             </template>
             <template v-else-if="isKycLoadFailed">
@@ -196,7 +197,7 @@ import AccountSection from './UserDetails.Account'
 
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
 
-import GeneralKycViewer from './UserDetails.GeneralKycViewer'
+import GeneralKycViewer from './UserDetails.GeneralKyc'
 import VerifiedKycViewer from './UserDetails.VerifiedKycViewer'
 import AccreditedKycViewer from './UserDetails.AccreditedKycViewer'
 
