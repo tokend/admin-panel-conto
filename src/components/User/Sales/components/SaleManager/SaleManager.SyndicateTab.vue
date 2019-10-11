@@ -3,7 +3,7 @@
     <template v-if="isLoaded">
       <div class="sale-manager-corporate-tab__details-wrp">
         <label class="data-caption">
-          Corporate user details
+          Business details
         </label>
         <ul class="key-value-list">
           <li>

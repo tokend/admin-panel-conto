@@ -21,20 +21,20 @@
       </li>
     </ul>
 
-    <kyc-general-section
-      :kyc="kyc"
+    <general-kyc
+      :blob-id="blobId"
       :user="user"
     />
   </div>
 </template>
 
 <script>
-import KycGeneralSection from './UserDetails.Kyc'
+import GeneralKyc from './UserDetails.GeneralKyc'
 import { UserDocLinkGetter } from '@comcom/getters'
 
 export default {
   components: {
-    KycGeneralSection,
+    GeneralKyc,
     UserDocLinkGetter,
   },
   props: {
@@ -44,6 +44,10 @@ export default {
     },
     user: {
       type: Object,
+      required: true,
+    },
+    blobId: {
+      type: String,
       required: true,
     },
   },

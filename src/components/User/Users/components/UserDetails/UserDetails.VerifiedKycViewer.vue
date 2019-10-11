@@ -1,26 +1,26 @@
 <template>
   <div class="user-details-verified-kyc-viewer">
-    <kyc-general-section
-      :kyc="kyc"
+    <general-kyc
+      :blob-id="blobId"
       :user="user"
     />
   </div>
 </template>
 
 <script>
-import KycGeneralSection from './UserDetails.Kyc'
+import GeneralKyc from './UserDetails.GeneralKyc'
 
 export default {
   components: {
-    KycGeneralSection,
+    GeneralKyc,
   },
   props: {
-    kyc: {
+    user: {
       type: Object,
       required: true,
     },
-    user: {
-      type: Object,
+    blobId: {
+      type: String,
       required: true,
     },
   },

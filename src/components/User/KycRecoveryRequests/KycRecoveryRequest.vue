@@ -20,20 +20,21 @@
           >
             <template v-if="isKycLoaded">
               <h2>Previous approved KYC Request</h2>
-              <general-kyc-viewer
+              <general-kyc
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
-                :kyc="kyc"
+                :blob-id="verifiedRequest.blobId"
                 :user="user"
               />
               <verified-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.usVerified"
-                :kyc="kyc"
+                :blob-id="verifiedRequest.blobId"
                 :user="user"
               />
               <accredited-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.usAccredited"
                 :kyc="kyc"
                 :user="user"
+                :blob-id="verifiedRequest.blobId"
               />
             </template>
             <template v-else-if="isKycLoadFailed">
@@ -59,9 +60,9 @@
             <h2>
               Data from KYC recovery request
             </h2>
-            <general-kyc-viewer
+            <general-kyc
               v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
-              :kyc="generalRecoveryKycData"
+              :blob-id="kycRecoveryRequestBlobId"
               :user="user"
             />
             <kyc-syndicate-section
@@ -101,7 +102,7 @@ import AccountSection from '../Users/components/UserDetails/UserDetails.Account'
 
 import KycSyndicateSection from '@/components/User/Sales/components/SaleManager/SaleManager.SyndicateTab'
 
-import GeneralKycViewer from '../Users/components/UserDetails/UserDetails.GeneralKycViewer'
+import GeneralKyc from '../Users/components/UserDetails/UserDetails.GeneralKyc'
 import VerifiedKycViewer from '../Users/components/UserDetails/UserDetails.VerifiedKycViewer'
 import AccreditedKycViewer from '../Users/components/UserDetails/UserDetails.AccreditedKycViewer'
 
@@ -130,7 +131,7 @@ export default {
     KycSyndicateSection,
     AccreditedKycViewer,
     VerifiedKycViewer,
-    GeneralKycViewer,
+    GeneralKyc,
     RequestActions,
   },
 
