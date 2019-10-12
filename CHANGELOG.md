@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
 
+## [1.0.0] - 2019-10-12
+
 ## [1.0.0-rc.3] - 2019-10-11
 #### Fixed
 - A bug displaying KYC data for different change role request
@@ -27,7 +29,8 @@ for further information about branching and tagging conventions.
 
 ## [1.0.0] - 2019-08-15
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.0.0-rc.3...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/tokend/admin-panel/compare/1.0.0-rc.3...1.0.0
 [1.0.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.0.0-rc.2...1.0.0-rc.3
 [1.0.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.0.0-rc.1...1.0.0-rc.2
 [1.0.0-rc.1]: https://github.com/tokend/admin-panel/compare/1.0.0-rc.0...1.0.0-rc.1
