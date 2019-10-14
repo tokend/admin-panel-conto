@@ -31,14 +31,14 @@
 
     <span
       class="app-list__cell"
-      :title="decision.tasks.toAdd | localizeTasks"
+      :title="decision.tasks.toAdd | localizeChangeRoleTasks"
     >
       {{ decision.tasks.toAdd || '&mdash;' }}
     </span>
 
     <span
       class="app-list__cell"
-      :title="decision.tasks.toRemove | localizeTasks"
+      :title="decision.tasks.toRemove | localizeChangeRoleTasks"
     >
       {{ decision.tasks.toRemove || '&mdash;' }}
     </span>
@@ -50,8 +50,6 @@ import { EmailGetter } from '@comcom/getters'
 
 import { ReviewDecision } from '../wrappers/ReviewDecision'
 import { DECISION_STATES } from '../constants/decision-states'
-
-import { mapGetters } from 'vuex'
 
 const EVENTS = {
   click: 'click',
@@ -75,25 +73,6 @@ export default {
         [DECISION_STATES.none]: 'Not reviewed',
       }[state]
     },
-
-    localizeTasks (tasks) {
-      let tasksDescriptions = []
-
-      if (tasks & this.kvChangeRoleTasks.submitAutoVerification) {
-        tasksDescriptions.push('Submit auto verification request')
-      }
-      if (tasks & this.kvChangeRoleTasks.completeAutoVerification) {
-        tasksDescriptions.push('Complete auto verification request')
-      }
-      if (tasks & this.kvChangeRoleTasks.manualReviewRequired) {
-        tasksDescriptions.push('Manual review required')
-      }
-      if (tasks & this.kvChangeRoleTasks.default) {
-        tasksDescriptions.push('Default')
-      }
-
-      return tasksDescriptions.join('\n')
-    },
   },
 
   props: {
@@ -104,12 +83,6 @@ export default {
     return {
       EVENTS,
     }
-  },
-
-  computed: {
-    ...mapGetters([
-      'kvChangeRoleTasks',
-    ]),
   },
 }
 </script>

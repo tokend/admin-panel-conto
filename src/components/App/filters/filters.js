@@ -63,3 +63,22 @@ export function formatVersion (string) {
     return string
   }
 }
+
+export function localizeChangeRoleTasks (tasks) {
+  let tasksDescriptions = []
+
+  if (tasks & store.getters.kvChangeRoleTasks.submitAutoVerification) {
+    tasksDescriptions.push('Submit auto verification request')
+  }
+  if (tasks & store.getters.kvChangeRoleTasks.completeAutoVerification) {
+    tasksDescriptions.push('Complete auto verification request')
+  }
+  if (tasks & store.getters.kvChangeRoleTasks.manualReviewRequired) {
+    tasksDescriptions.push('Manual review required')
+  }
+  if (tasks & store.getters.kvChangeRoleTasks.default) {
+    tasksDescriptions.push('Default')
+  }
+
+  return tasksDescriptions.join('\n')
+}
