@@ -18,6 +18,14 @@
               </user-doc-link-getter>
             </span>
           </li>
+          <li v-if="kycAvatarKey">
+            <span>Banner</span>
+            <span>
+              <user-doc-link-getter :file-key="kycBannerKey">
+                Open file
+              </user-doc-link-getter>
+            </span>
+          </li>
           <li v-if="corporate.headquarters">
             <span>Headquarters</span>
             <span>{{ corporate.headquarters }}</span>
@@ -45,6 +53,16 @@
                 class="sale-manager-corporate-tab__doc-view"
                 :file-key="kycAvatarKey"
                 :mime-type="kycAvatarMimeType"
+              />
+            </div>
+          </li>
+          <li v-if="kycBannerKey">
+            <div class="sale-manager-corporate-tab__doc-view-wrp">
+              <h3>Banner</h3>
+              <user-doc-getter
+                class="sale-manager-corporate-tab__doc-view"
+                :file-key="kycBannerKey"
+                :mime-type="kycBannerMimeType"
               />
             </div>
           </li>
@@ -107,9 +125,15 @@ export default {
     kycAvatarKey () {
       return _get(this.corporate, 'documents.kyc_avatar.key')
     },
+    kycBannerKey () {
+      return _get(this.corporate, 'documents.bravo.key')
+    },
 
     kycAvatarMimeType () {
       return _get(this.corporate, 'documents.kyc_avatar.mime_type')
+    },
+    kycBannerMimeType () {
+      return _get(this.corporate, 'documents.bravo.mime_type')
     },
   },
 

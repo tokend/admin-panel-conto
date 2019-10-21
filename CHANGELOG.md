@@ -6,10 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Please check our [developers guide](https://gitlab.com/tokend/developers-guide)
 for further information about branching and tagging conventions.
-## [Unreleased]
+## [1.1.0-rc.0] - 2019-10-21
+#### Added
+- A banner into corporate kyc data
+
 #### Fixed
 - A bug when don't show a list all reviewed KYC requests on Queue page
-  
 
 ## [1.0.0] - 2019-10-12
 
@@ -33,7 +35,8 @@ for further information about branching and tagging conventions.
 
 ## [1.0.0] - 2019-08-15
 
-[Unreleased]: https://github.com/tokend/admin-panel/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/tokend/admin-panel/compare/1.1.0-rc.0...HEAD
+[1.1.0-rc.0]: https://github.com/tokend/admin-panel/compare/1.0.0...1.1.0-rc.0
 [1.0.0]: https://github.com/tokend/admin-panel/compare/1.0.0-rc.3...1.0.0
 [1.0.0-rc.3]: https://github.com/tokend/admin-panel/compare/1.0.0-rc.2...1.0.0-rc.3
 [1.0.0-rc.2]: https://github.com/tokend/admin-panel/compare/1.0.0-rc.1...1.0.0-rc.2

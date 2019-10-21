@@ -77,7 +77,6 @@ export default {
 
 .user-doc-getter__inner {
   overflow-y: auto;
-  min-height: 100%;
   max-height: 405px;
 
   &:hover {
