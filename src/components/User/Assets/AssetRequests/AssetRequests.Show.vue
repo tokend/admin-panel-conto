@@ -100,6 +100,18 @@
       </div>
 
       <div
+        v-if="assetRequest.operationDetails.creatorDetails.expiresAt"
+        class="asset-requests-show__row"
+      >
+        <span class="asset-requests-show__key">
+          Expiration date
+        </span>
+        <span class="asset-requests-show__value">
+          {{ formatDate(getExpirationDate) }}
+        </span>
+      </div>
+
+      <div
         class="asset-requests-show__row"
         v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
       >
@@ -307,6 +319,7 @@
 <script>
 import TextField from '@comcom/fields/TextField'
 import AssetRequestRejectForm from './components/AssetRequestRejectForm'
+import moment from 'moment'
 
 import { ImgGetter, EmailGetter, UserDocLinkGetter } from '@comcom/getters'
 import { DateFormatter } from '@comcom/formatters'
@@ -320,6 +333,7 @@ import safeGet from 'lodash/get'
 import { AssetRequest } from '@/apiHelper/responseHandlers/requests/AssetRequest'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
+import { formatDate } from '@/utils/formatters'
 
 import {
   ASSET_POLICIES_VERBOSE,
@@ -394,6 +408,11 @@ export default {
 
       return label
     },
+
+    getExpirationDate () {
+      // eslint-disable-next-line max-len
+      return moment(+this.assetRequest.operationDetails.creatorDetails.expiresAt * 1000)
+    },
   },
 
   async created () {
@@ -415,6 +434,7 @@ export default {
   methods: {
     verbozify,
     safeGet,
+    formatDate,
 
     async fulfill () {
       this.isPending = true
