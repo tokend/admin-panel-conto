@@ -107,7 +107,10 @@
           Expiration date
         </span>
         <span class="asset-requests-show__value">
-          {{ formatDate(getExpirationDate) }}
+          <date-formatter
+            :date="getExpirationDate"
+            format="DD MMM YYYY [at] HH:mm"
+          />
         </span>
       </div>
 
@@ -333,7 +336,6 @@ import safeGet from 'lodash/get'
 import { AssetRequest } from '@/apiHelper/responseHandlers/requests/AssetRequest'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
-import { formatDate } from '@/utils/formatters'
 
 import {
   ASSET_POLICIES_VERBOSE,
@@ -411,7 +413,7 @@ export default {
 
     getExpirationDate () {
       // eslint-disable-next-line max-len
-      return moment(+this.assetRequest.operationDetails.creatorDetails.expiresAt * 1000)
+      return moment.unix(this.assetRequest.operationDetails.creatorDetails.expiresAt)
     },
   },
 
@@ -434,7 +436,6 @@ export default {
   methods: {
     verbozify,
     safeGet,
-    formatDate,
 
     async fulfill () {
       this.isPending = true
