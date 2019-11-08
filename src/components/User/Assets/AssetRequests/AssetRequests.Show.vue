@@ -100,6 +100,21 @@
       </div>
 
       <div
+        v-if="assetRequest.operationDetails.creatorDetails.expiresAt"
+        class="asset-requests-show__row"
+      >
+        <span class="asset-requests-show__key">
+          Expiration date
+        </span>
+        <span class="asset-requests-show__value">
+          <date-formatter
+            :date="getExpirationDate"
+            format="DD MMM YYYY [at] HH:mm"
+          />
+        </span>
+      </div>
+
+      <div
         class="asset-requests-show__row"
         v-if="assetRequest.type !== ASSET_REQUEST_TYPES.updateAsset"
       >
@@ -307,6 +322,7 @@
 <script>
 import TextField from '@comcom/fields/TextField'
 import AssetRequestRejectForm from './components/AssetRequestRejectForm'
+import moment from 'moment'
 
 import { ImgGetter, EmailGetter, UserDocLinkGetter } from '@comcom/getters'
 import { DateFormatter } from '@comcom/formatters'
@@ -393,6 +409,11 @@ export default {
       }
 
       return label
+    },
+
+    getExpirationDate () {
+      // eslint-disable-next-line max-len
+      return moment.unix(this.assetRequest.operationDetails.creatorDetails.expiresAt)
     },
   },
 
