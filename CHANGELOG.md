@@ -12,6 +12,9 @@ for further information about branching and tagging conventions.
 - Displaying expiration date for asset requests
 - Handling of transactions error
 
+#### Fixed
+- A bug when unblocked companies don't display at list
+
 ## [1.1.0-rc.0] - 2019-10-21
 #### Added
 - A banner into corporate kyc data
