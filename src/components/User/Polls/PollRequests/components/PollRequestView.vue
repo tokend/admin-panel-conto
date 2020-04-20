@@ -3,41 +3,37 @@
     <div class="app__block">
       <div class="poll-request-view__request-attributes">
         <label class="data-caption">
-          Request details
+          {{ "poll-request-view.request-details" | globalize }}
         </label>
 
         <ul class="key-value-list">
           <li>
-            <span>Request ID</span>
+            <span>{{ "poll-request-view.request-id" | globalize }}</span>
             <span>{{ request.id }}</span>
           </li>
           <li>
-            <span>Requestor</span>
+            <span>{{ "poll-request-view.requestor" | globalize }}</span>
             <email-getter
               :account-id="request.requestor.id"
               is-titled
             />
           </li>
           <li>
-            <span>Request state</span>
-            <request-state-formatter
-              :state="request.state"
-              is-colored
-            />
+            <span>{{ "poll-request-view.request-state" | globalize }}</span>
+            <span>{{ request.stateI | globalizeRequestStateI }}</span>
           </li>
 
           <li>
-            <span>Requested at</span>
-            <date-formatter
-              :date="request.createdAt"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>{{ "poll-request-view.requested-at" | globalize }}</span>
+            <span>
+              {{ request.createdAt | formatDate }}
+            </span>
           </li>
         </ul>
 
         <template v-if="request.rejectReason">
           <label class="data-caption danger">
-            Reject reason
+            {{ "poll-request-view.label-reject-reason" | globalize }}
           </label>
           <p class="text">
             {{ request.rejectReason }}
@@ -45,7 +41,7 @@
         </template>
 
         <label class="data-caption">
-          Poll question and answers
+          {{ "poll-request-view.poll-question-and-answers" | globalize }}
         </label>
 
         <p class="poll-request-view__question">
@@ -57,7 +53,12 @@
             v-for="item in request.requestDetails.creatorDetails.choices"
             :key="item.number"
           >
-            <span>Answer #{{ item.number }}</span>
+            <span>
+              {{ "poll-request-view.answer" | globalize({
+                number: item.number
+              })
+              }}
+            </span>
             <span>
               {{ item.description }}
             </span>
@@ -65,40 +66,38 @@
         </ul>
 
         <label class="data-caption">
-          Poll details
+          {{ "poll-request-view.poll-details" | globalize }}
         </label>
 
         <ul class="key-value-list">
           <li>
-            <span>Number of choices</span>
+            <span>{{ "poll-request-view.number-of-choices" | globalize }}</span>
             <span>{{ request.requestDetails.numberOfChoices }}</span>
           </li>
 
           <li>
-            <span>Start time</span>
-            <date-formatter
-              :date="request.requestDetails.startTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>{{ "poll-request-view.start-time" | globalize }}</span>
+            <span>
+              {{ request.requestDetails.startTime | formatDate }}
+            </span>
           </li>
 
           <li>
-            <span>End time</span>
-            <date-formatter
-              :date="request.requestDetails.endTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>{{ "poll-request-view.end-time" | globalize }}</span>
+            <span>
+              {{ request.requestDetails.endTime | formatDate }}
+            </span>
           </li>
 
           <li>
-            <span>Permission type</span>
+            <span>{{ "poll-request-view.permission-type" | globalize }}</span>
             <span>
               {{ request.requestDetails.permissionType | pollTypeToString }}
             </span>
           </li>
 
           <li>
-            <span>Result provider</span>
+            <span>{{ "poll-request-view.result-provider" | globalize }}</span>
             <email-getter
               :account-id="request.requestDetails.resultProvider.id"
               is-titled
@@ -106,13 +105,14 @@
           </li>
 
           <li>
-            <span>Vote confirmation required</span>
             <span>
-              <template v-if="request.requestDetails.voteConfirmationRequired">
-                Yes
-              </template>
-              <template v-else>
-                No
+              {{ "poll-request-view.vote-confirmation-required" | globalize }}
+            </span>
+            <span>
+              <template>
+                {{
+                  request.requestDetails.voteConfirmationRequired | yesNoFilter
+                }}
               </template>
             </span>
           </li>
@@ -122,21 +122,21 @@
       <template v-if="isRequestLoaded">
         <div
           class="poll-request-view__actions app__form-actions"
-          v-if="request.stateI === REQUEST_STATES.pending"
+          v-if="request.stateI === REQUEST_STATES.pending.stateI"
         >
           <button
             class="app__btn"
             @click="approve"
             :disabled="isSubmitting"
           >
-            Approve
+            {{ "poll-request-view.btn-approve" | globalize }}
           </button>
           <button
             class="app__btn app__btn--danger"
             :disabled="isSubmitting"
             @click="showRejectForm"
           >
-            Reject
+            {{ "poll-request-view.btn-reject" | globalize }}
           </button>
         </div>
       </template>
@@ -144,10 +144,10 @@
       <template v-else>
         <p>
           <template v-if="isRequestFailed">
-            An error occurred
+            {{ "poll-request-view.error" | globalize }}
           </template>
           <template v-else>
-            Loading...
+            {{ "poll-request-view.loading" | globalize }}
           </template>
         </p>
       </template>
@@ -159,7 +159,7 @@
       max-width="40rem"
     >
       <p class="text">
-        Reject reason
+        {{ "poll-request-view.reject-reason" | globalize }}
       </p>
 
       <form
@@ -184,7 +184,7 @@
         <div class="app__form-row">
           <tick-field
             v-model="rejectForm.isPermanentReject"
-            label="Reject permanently"
+            :label="'poll-request-view.lbl-perm-reject' | globalize"
             disabled
           />
         </div>
@@ -196,14 +196,14 @@
           form="sale-reject-form"
           :disabled="formMixin.isDisabled"
         >
-          Reject
+          {{ "poll-request-view.btn-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectForm"
           :disabled="formMixin.isDisabled"
         >
-          Cancel
+          {{ "poll-request-view.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>
@@ -215,10 +215,6 @@ import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
-import {
-  DateFormatter,
-  RequestStateFormatter,
-} from '@comcom/formatters'
 
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '@/js/modals/confirmation_message'
@@ -234,8 +230,6 @@ const REJECT_REASON_MAX_LENGTH = 255
 
 export default {
   components: {
-    DateFormatter,
-    RequestStateFormatter,
     EmailGetter,
     Modal,
   },
@@ -309,7 +303,7 @@ export default {
       if (await confirmAction()) {
         try {
           await apiHelper.requests.approve(this.request)
-          Bus.success('Sale request approved.')
+          Bus.success('poll-request-view.poll-request-approved')
           this.$router.push({ name: 'polls.requests' })
         } catch (error) {
           ErrorHandler.process(error)
@@ -331,7 +325,7 @@ export default {
           },
           this.request
         )
-        Bus.success('Sale request rejected successfully.')
+        Bus.success('poll-request-view.poll-request-rejected')
         this.$router.push({ name: 'polls.requests' })
       } catch (error) {
         ErrorHandler.process(error)

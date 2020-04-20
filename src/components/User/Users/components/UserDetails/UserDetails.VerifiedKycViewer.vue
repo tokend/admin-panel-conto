@@ -8,19 +8,12 @@
 </template>
 
 <script>
-import GeneralKyc from './UserDetails.GeneralKyc'
+import { UserRecord } from '@/js/records/user.record'
 
 export default {
-  components: {
-    GeneralKyc,
-  },
   props: {
     user: {
-      type: Object,
-      required: true,
-    },
-    blobId: {
-      type: String,
+      type: UserRecord,
       required: true,
     },
   },

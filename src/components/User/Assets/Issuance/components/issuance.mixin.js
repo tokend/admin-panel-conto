@@ -4,7 +4,6 @@ import { CollectionLoader } from '@/components/common'
 import { REQUEST_STATES, ASSET_POLICIES } from '@/constants'
 
 import localize from '@/utils/localize'
-
 import config from '@/config'
 import { api, loadingDataViaLoop } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
@@ -28,7 +27,7 @@ export default {
         reason: '',
       },
       filters: {
-        state: REQUEST_STATES.approved,
+        state: REQUEST_STATES.approved.stateI,
         asset: '',
       },
     }

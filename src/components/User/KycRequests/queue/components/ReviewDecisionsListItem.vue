@@ -20,25 +20,28 @@
     <span
       class="app-list__cell review-decisions-list-item__state"
       :class="`review-decisions-list-item__state--${decision.state}`"
-      :title="decision.state | localizeDecisionState"
+      :title="decision.state | localizeDecisionState | globalize"
     >
-      {{ decision.state | localizeDecisionState }}
+      {{ decision.state | localizeDecisionState | globalize }}
     </span>
 
-    <span class="app-list__cell" :title="decision.reason">
+    <span
+      class="app-list__cell"
+      :title="decision.reason"
+    >
       {{ decision.reason || '&mdash;' }}
     </span>
 
     <span
       class="app-list__cell"
-      :title="decision.tasks.toAdd | localizeChangeRoleTasks"
+      :title="decision.tasks.toAdd | localizeTasks | globalize"
     >
       {{ decision.tasks.toAdd || '&mdash;' }}
     </span>
 
     <span
       class="app-list__cell"
-      :title="decision.tasks.toRemove | localizeChangeRoleTasks"
+      :title="decision.tasks.toRemove | localizeTasks | globalize"
     >
       {{ decision.tasks.toRemove || '&mdash;' }}
     </span>
@@ -62,16 +65,38 @@ export default {
   filters: {
     localizeDecisionState (state) {
       return {
-        [DECISION_STATES.approve]: 'Ready to approve',
-        [DECISION_STATES.approving]: 'Approving…',
-        [DECISION_STATES.approved]: 'Approved',
-        [DECISION_STATES.error]: 'Error',
-        [DECISION_STATES.reject]: 'Ready to reject',
-        [DECISION_STATES.rejecting]: 'Rejecting…',
-        [DECISION_STATES.rejected]: 'Rejected',
-        [DECISION_STATES.skip]: 'Skipped',
-        [DECISION_STATES.none]: 'Not reviewed',
+        [DECISION_STATES.approve]: 'review-decisions-list-item.approve',
+        [DECISION_STATES.approving]: 'review-decisions-list-item.approving',
+        [DECISION_STATES.approved]: 'review-decisions-list-item.approved',
+        [DECISION_STATES.error]: 'review-decisions-list-item.error',
+        [DECISION_STATES.reject]: 'review-decisions-list-item.reject',
+        [DECISION_STATES.rejecting]: 'review-decisions-list-item.rejecting',
+        [DECISION_STATES.rejected]: 'review-decisions-list-item.rejected',
+        [DECISION_STATES.skip]: 'review-decisions-list-item.skip',
+        [DECISION_STATES.none]: 'review-decisions-list-item.none',
       }[state]
+    },
+
+    localizeTasks (tasks) {
+      let tasksDescriptions = []
+
+      if (tasks & this.kvChangeRoleTasks.submitAutoVerification) {
+        tasksDescriptions
+          .push('review-decisions-list-item.submit-auto-verification')
+      }
+      if (tasks & this.kvChangeRoleTasks.completeAutoVerification) {
+        tasksDescriptions
+          .push('review-decisions-list-item.complete-auto-verification')
+      }
+      if (tasks & this.kvChangeRoleTasks.manualReviewRequired) {
+        tasksDescriptions
+          .push('review-decisions-list-item.manual-review-required')
+      }
+      if (tasks & this.kvChangeRoleTasks.default) {
+        tasksDescriptions.push('review-decisions-list-item.default')
+      }
+
+      return tasksDescriptions.join('\n')
     },
   },
 

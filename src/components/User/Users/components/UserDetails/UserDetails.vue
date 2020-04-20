@@ -1,7 +1,7 @@
 <template>
   <div class="user-details">
     <div class="app__block">
-      <h2>User details</h2>
+      <h2>{{ "user-details.header" | globalize }}</h2>
 
       <template v-if="isLoaded">
         <section
@@ -10,7 +10,7 @@
         >
           <ul class="key-value-list">
             <li>
-              <h3>Current request state</h3>
+              <h3>{{ "user-details.current-request-state" | globalize }}</h3>
               <p
                 :class="`user-details__state-info
                          user-details__state-info--${requestToReview.state}`">
@@ -18,22 +18,25 @@
               </p>
             </li>
             <li>
-              <h3>Role to set</h3>
+              <h3>{{ "user-details.role-set" | globalize }}</h3>
               <p class="user-details__role-info">
                 {{
-                  roleTypeVerbose[requestToReview.accountRoleToSet
-                    || verifiedRequest.accountRoleToSet]
+                  (requestToReview.accountRoleToSet
+                    || verifiedRequest.accountRoleToSet) | roleTypeVerboseFilter
                 }}
               </p>
             </li>
           </ul>
           <p v-if="requestToReview.isRejected">
-            Reason: {{ requestToReview.rejectReason }}
+            {{ "user-details.reason" | globalize({
+              rejectReason: requestToReview.rejectReason
+            })
+            }}
           </p>
 
           <template v-if="requestToReview.externalDetails">
             <div class="user-details__ext-details-wrp">
-              <h3>External details (provided by external services)</h3>
+              <h3>{{ "user-details.external-details" | globalize }}</h3>
               <external-details-viewer
                 :external-details="requestToReview.externalDetails"
               />
@@ -44,7 +47,6 @@
         <section class="user-details__section">
           <account-section
             :user="user"
-            :original-role="userRole"
             :block-reason="latestBlockedRequest.blockReason"
           />
         </section>
@@ -56,29 +58,32 @@
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.general
                 "
-                :blob-id="requestToReview.blobId"
-                :user="user" />
+                :kyc="kyc"
+                :user="user"
+              />
               <verified-kyc-viewer
                 v-if="
                   requestToReview.accountRoleToSet === kvAccountRoles.usVerified
                 "
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
               <accredited-kyc-viewer
                 v-if="
                   requestToReview.accountRoleToSet ===
                     kvAccountRoles.usAccredited
                 "
                 :kyc="kyc"
-                :user="user" />
+                :user="user"
+              />
             </template>
             <template v-else-if="isKycLoadFailed">
               <p class="danger">
-                An error occurred. Please try again later.
+                {{ "user-details.error" | globalize }}
               </p>
             </template>
             <template v-else>
-              <p>Loading...</p>
+              <p>{{ "user-details.loading" | globalize }}</p>
             </template>
             <kyc-syndicate-section
               v-if="
@@ -98,8 +103,8 @@
             class="user-details__section"
           >
             <template v-if="isKycLoaded">
-              <h2>Previous approved KYC Request</h2>
-              <general-kyc
+              <h2>{{ "user-details.previous-approved-kys-request" | globalize }}</h2>
+              <general-kyc-viewer
                 v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.general"
                 :blob-id="verifiedRequest.blobId"
                 :user="user"
@@ -118,11 +123,11 @@
             </template>
             <template v-else-if="isKycLoadFailed">
               <p class="danger">
-                An error occurred. Please try again later.
+                {{ "user-details.error" | globalize }}
               </p>
             </template>
             <template v-else>
-              <p>Loading...</p>
+              <p>{{ "user-details.loading" | globalize }}</p>
             </template>
             <kyc-syndicate-section
               v-if="verifiedRequest.accountRoleToSet === kvAccountRoles.corporate"
@@ -136,56 +141,61 @@
             v-if="requestToReview.state"
             class="user-details__latest-request"
           >
-            <h3>Latest request</h3>
+            <h3>{{ "user-details.latest-request" | globalize }}</h3>
             <!-- eslint-disable max-len -->
             <p class="text">
-              Create a "{{ requestToReview.accountRoleToSet | roleIdToString }}" account:
-              {{ requestToReview.state }}
+              {{ "user-details.create" | globalize({
+                accountRoleToSet: requestToReview.accountRoleToSet | roleIdToString,
+                state: requestToReview.state
+              })
+              }}
             </p>
             <!-- eslint-enable max-len -->
           </div>
         </template>
 
-        <div class="user-details__actions-wrp">
-          <template v-if="requestToReview.state">
-            <request-actions
-              class="user-details__actions"
-              :user="user"
-              :request-to-review="requestToReview"
-              :latest-approved-request="verifiedRequest"
-              @reviewed="getUpdatedUser"
-            />
-          </template>
+        <template v-if="!isAdmin">
+          <div class="user-details__actions-wrp">
+            <template v-if="requestToReview.state">
+              <request-actions
+                class="user-details__actions"
+                :user="user"
+                :request-to-review="requestToReview"
+                :latest-approved-request="verifiedRequest"
+                @reviewed="getUpdatedUser"
+              />
+            </template>
 
-          <template v-else>
-            <block-actions
-              class="user-details__actions"
-              :user="user"
-              :latest-approved-request="latestApprovedRequest"
-              :verified-request="verifiedRequest"
-              :is-pending.sync="isPending"
-              @updated="getUpdatedUser"
-            />
+            <template v-else>
+              <block-actions
+                class="user-details__actions"
+                :user="user"
+                :latest-approved-request="latestApprovedRequest"
+                :verified-request="verifiedRequest"
+                :is-pending.sync="isPending"
+                @updated="getUpdatedUser"
+              />
 
-            <reset-actions
-              v-if="!isUserBlocked"
-              class="user-details__actions"
-              :user="user"
-              :verified-request="verifiedRequest"
-              :is-pending.sync="isPending"
-              @reset="getUpdatedUser"
-            />
-          </template>
-        </div>
+              <reset-actions
+                v-if="!isUserBlocked"
+                class="user-details__actions"
+                :user="user"
+                :verified-request="verifiedRequest"
+                :is-pending.sync="isPending"
+                @reset="getUpdatedUser"
+              />
+            </template>
+          </div>
+        </template>
       </template>
 
       <template v-else-if="!isFailed">
-        <p>Loading...</p>
+        <p>{{ "user-details.loading" | globalize }}</p>
       </template>
 
       <template v-else>
         <p class="danger">
-          An error occurred. Please try again later.
+          {{ "user-details.error" | globalize }}
         </p>
       </template>
     </div>
@@ -206,13 +216,14 @@ import ResetActions from './UserDetails.Reset'
 import BlockActions from './UserDetails.Block'
 
 import ExternalDetailsViewer from './UserDetails.ExternalDetailsViewer'
+import deepCamelCase from 'camelcase-keys-deep'
+import apiHelper from '@/apiHelper'
 
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 import { fromKycTemplate } from '../../../../../utils/kyc-tempater'
-import deepCamelCase from 'camelcase-keys-deep'
 
 import { mapGetters } from 'vuex'
 
@@ -258,17 +269,8 @@ export default {
   computed: {
     ...mapGetters([
       'kvAccountRoles',
+      'accountId',
     ]),
-
-    roleTypeVerbose () {
-      return {
-        [ this.kvAccountRoles.general ]: 'General',
-        [ this.kvAccountRoles.usVerified ]: 'US Verified',
-        [ this.kvAccountRoles.usAccredited ]: 'US Accredited',
-        [ this.kvAccountRoles.corporate ]: 'Corporate',
-        [ this.kvAccountRoles.notVerified ]: 'Not Verified',
-      }
-    },
 
     isUserBlocked () {
       return this.user.role === this.kvAccountRoles.blocked
@@ -299,11 +301,8 @@ export default {
       }) || new ChangeRoleRequest({})
     },
 
-    userRole () {
-      return String(
-        this.latestNonBlockedRequest.accountRoleToSet ||
-        this.kvAccountRoles.unverified
-      )
+    isAdmin () {
+      return this.user.address === this.accountId
     },
   },
 
@@ -323,16 +322,14 @@ export default {
       this.isFailed = false
       try {
         const [user, requests] = await Promise.all([
-          api.getWithSignature('/identities', {
-            filter: { address: this.id },
-          }),
+          apiHelper.users.getUserByAccountId(this.id),
           api.getWithSignature('/v3/change_role_requests', {
             page: { order: 'desc' },
             filter: { requestor: this.id },
             include: ['request_details'],
           }),
         ])
-        this.user = user.data[0]
+        this.user = user
         this.requests = requests.data
           ? requests.data.map(item => new ChangeRoleRequest(item))
           : []

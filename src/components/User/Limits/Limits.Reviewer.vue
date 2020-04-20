@@ -7,50 +7,54 @@
       <span class="limits-reviewer__back-btn-inner">
         <i class="mdi mdi-chevron-left" />
       </span>
-      Back
+      {{ "limits-reviewer.btn-back" | globalize }}
     </button>
     <template v-if="isLoaded && desiredLimitDetails">
       <div class="limits-reviewer__card">
         <h3 class="limits-reviewer__heading">
-          Request information
+          {{ "limits-reviewer.request-information" | globalize }}
         </h3>
         <div class="limits-reviewer__content-section">
           <detail
-            label="Request date & time"
-            :value="formatDateWithTime(request.createdAt)"
+            :label="'limits-reviewer.lbl-request-date-time' | globalize"
+            :value="request.createdAt | formatDate"
           />
           <detail
-            label="Account role"
+            :label="'limits-reviewer.lbl-account-type' | globalize"
             :value="account.role.id | roleIdToString"
           />
           <detail
-            label="Request type"
-            :value="requestType"
+            :label="'limits-reviewer.lbl-request-type' | globalize"
+            :value="
+              desiredLimitDetails.requestType | limitsRequestStatesStrFilter
+            "
           />
-          <detail label="Account email">
+          <detail :label="'limits-reviewer.lbl-account-email' | globalize">
             <email-getter :account-id="account.id" />
           </detail>
           <detail
-            label="Account ID"
+            :label="'limits-reviewer.lbl-account-id' | globalize"
             :value="request.requestor.id"
           />
           <detail
-            label="Note"
+            :label="'limits-reviewer.lbl-note' | globalize"
             :value="get(desiredLimitDetails, 'note')"
           />
           <detail
-            label="Limits for asset"
+            :label="'limits-reviewer.lbl-limits-for-asset' | globalize"
             :value="get(desiredLimitDetails, 'asset')"
           />
           <detail
-            label="Operation type limits"
-            :value="get(desiredLimitDetails, 'operationType')"
+            :label="'limits-reviewer.lbl-operation-type-limits' | globalize"
+            :value="
+              get(desiredLimitDetails, 'statsOpType') | globalizeStatsOpType
+            "
           />
         </div>
         <div class="limits-reviewer__limits-wrapper">
           <div class="limits-review__limits-item">
             <h3 class="limits-reviewer__heading">
-              Current limits
+              {{ "limits-reviewer.current-limits" | globalize }}
             </h3>
             <div class="limits-reviewer__content-section">
               <user-limits
@@ -61,7 +65,7 @@
           </div>
           <div class="limits-review__limits-item">
             <h3 class="limits-reviewer__heading">
-              Desired limits
+              {{ "limits-reviewer.desired-limits" | globalize }}
             </h3>
             <div class="limits-reviewer__content-section">
               <user-limits
@@ -72,10 +76,12 @@
           </div>
         </div>
       </div>
-      <template v-if="desiredLimitDetails.requestType === 'docsUploading'">
+      <template
+        v-if="desiredLimitDetails.requestType === 'docsUploading'"
+      >
         <div class="limits-reviewer__uploaded-docs-list-wrapper">
           <h3 class="limits-reviewer__heading">
-            Uploaded documents
+            {{ "limits-reviewer.uploaded-documents" | globalize }}
           </h3>
           <uploaded-docs-list
             v-if="uploadedDocuments"
@@ -95,34 +101,34 @@
           @click="approveRequest"
           :disabled="isPending"
         >
-          Approve
+          {{ "limits-reviewer.btn-approve" | globalize }}
         </button>
         <button
           class="app__btn"
           @click="isRequiringDocs = true"
           :disabled="isPending ||
             desiredLimitDetails.requestType === 'docsUploading' ||
-            request.state === REQUEST_STATES.pending"
+            request.state === REQUEST_STATES.pending.stateI"
         >
-          Request docs
+          {{ "limits-reviewer.btn-request-docs" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="showRejectModal"
           :disabled="isPending"
         >
-          Reject
+          {{ "limits-reviewer.btn-reject" | globalize }}
         </button>
       </div>
     </template>
     <template v-else>
       <template v-if="!isLoaded">
         <p>
-          Loading...
+          {{ "limits-reviewer.loading" | globalize }}
         </p>
       </template>
       <template v-else>
-        <h3>Something went wrong....</h3>
+        <h3>{{ "limits-reviewer.fail-load" | globalize }}</h3>
       </template>
     </template>
     <template v-if="isRequiringDocs">
@@ -137,9 +143,16 @@
                 :doc-item="item"
                 :key="i"
               />
+              <transition name="limits-reviewer__doc-label-err-transition">
+                <p
+                  class="limits-reviewer__doc-label-err-mes"
+                  v-if="!item.isDocValid">
+                  {{ 'limits-reviewer.choose-from-list' | globalize }}
+                </p>
+              </transition>
             </div>
             <text-field
-              label="Document description"
+              :label="'limits-reviewer.lbl-document-description' | globalize"
               class="limits-reviewer__doc-textfield"
               :autofocus="true"
               v-model="item.description"
@@ -157,14 +170,14 @@
             :disabled="isPending"
             @click="addMoreDoc"
           >
-            Add more
+            {{ "limits-reviewer.btn-add-more" | globalize }}
           </button>
           <button
             class="app__btn"
             :disabled="isPending"
             @click="requireDocsRequest"
           >
-            Submit
+            {{ "limits-reviewer.btn-submit" | globalize }}
           </button>
         </div>
       </div>
@@ -183,7 +196,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Reject reason"
+            :label="'limits-reviewer.lbl-reject-reason' | globalize"
             class="limits-reviewer__reject-form-textfield"
             :autofocus="true"
             v-model="rejectForm.reason"
@@ -200,13 +213,13 @@
           class="app__btn"
           form="limits-reviewer__reject-form"
         >
-          Reject
+          {{ "limits-reviewer.btn-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="hideRejectModal"
         >
-          Cancel
+          {{ "limits-reviewer.btn-cancel" | globalize }}
         </button>
       </div>
     </modal>
@@ -215,6 +228,7 @@
 
 <script>
 import FormMixin from '@/mixins/form.mixin'
+import DatalistMixin from '@/mixins/datalist.mixin'
 import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
@@ -229,14 +243,12 @@ import UploadedDocsList from './components/Limits.UploadedDocsList'
 import { api } from '@/api'
 import apiHelper from '@/apiHelper'
 
+import { globalize } from '@/components/App/filters/filters'
+
 import {
   REQUEST_STATES,
   DOCUMENT_TYPES_STR,
-  LIMITS_REQUEST_STATES_STR,
 } from '@/constants'
-import { STATS_OPERATION_TYPES } from '@tokend/js-sdk'
-
-import { formatDateWithTime } from '../../../utils/formatters'
 
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
@@ -256,12 +268,6 @@ const DEFAULT_LIMIT_STRUCT = {
   'annualOut': '9223372036854.775807',
 }
 
-const OPERATION_TYPES = {
-  payment: 'paymentOut',
-  deposit: 'deposit',
-  withdraw: 'withdraw',
-}
-
 const REJECT_REASON_MAX_LENGTH = 255
 
 export default {
@@ -274,7 +280,7 @@ export default {
     UploadedDocsList,
     EmailGetter,
   },
-  mixins: [FormMixin],
+  mixins: [FormMixin, DatalistMixin],
 
   props: {
     id: { type: String, required: true },
@@ -291,12 +297,12 @@ export default {
     desiredLimitDetails: null,
     REQUEST_STATES,
     DOCUMENT_TYPES_STR,
-    LIMITS_REQUEST_STATES_STR,
     REJECT_REASON_MAX_LENGTH,
     uploadDocs: [
       {
         label: '',
         description: '',
+        isDocValid: true,
       },
     ],
     rejectForm: {
@@ -330,13 +336,11 @@ export default {
         ...DEFAULT_LIMIT_STRUCT,
         accountId: this.request.requestor,
         assetCode: this.assetCode,
-        statsOpType: this.desiredLimitDetails.operationType,
+        statsOpType: this.desiredLimitDetails.statsOpType,
       }
     },
-
     newLimit () {
       const requestDetails = this.desiredLimitDetails
-      const operationType = OPERATION_TYPES[requestDetails.operationType]
       const limitsList = Object.entries(requestDetails.limits)
       const limits = {}
       for (let limit of limitsList) {
@@ -347,7 +351,7 @@ export default {
         ...limits,
         accountId: this.request.requestor.id,
         assetCode: this.assetCode,
-        statsOpType: STATS_OPERATION_TYPES[operationType],
+        statsOpType: requestDetails.statsOpType,
       }
     },
 
@@ -355,12 +359,7 @@ export default {
       if (!this.desiredLimitDetails.documents) return
       return this.desiredLimitDetails.documents
     },
-
-    requestType () {
-      return LIMITS_REQUEST_STATES_STR[get(this.desiredLimitDetails, 'requestType')]
-    },
   },
-
   async created () {
     try {
       await this.getRequest()
@@ -375,7 +374,6 @@ export default {
 
   methods: {
     get,
-    formatDateWithTime,
 
     async getRequest () {
       this.$store.commit('OPEN_LOADER')
@@ -404,18 +402,19 @@ export default {
           newLimits.push(this.newLimit)
         }
         if (!newLimits.length) {
-          ErrorHandler.process('Please update user limits before approving request')
+          ErrorHandler.process(new Error(
+            globalize('limits-reviewer.please-update-user-limits')
+          ), 'limits-reviewer.please-update-user-limits')
           this.isPending = false
           return
         }
         const oldLimits = this.limits
           .find(item => {
             const requestOpType = this.request.requestDetails.creatorDetails
-              .operationType
-            const limitsOpType = OPERATION_TYPES[requestOpType]
+              .statsOpType
 
             return item.assetCode === this.request.asset &&
-              item.statsOpType === STATS_OPERATION_TYPES[limitsOpType]
+              item.statsOpType === requestOpType
           })
 
         await apiHelper.requests.approveLimitsUpdate({
@@ -426,7 +425,7 @@ export default {
         })
 
         this.$router.push({ name: 'limits.requests' })
-        Bus.success('Request approved. Limits are changed')
+        Bus.success('limits-reviewer.request-approved')
       } catch (error) {
         ErrorHandler.process(error)
       }
@@ -449,7 +448,7 @@ export default {
         }, this.request)
 
         this.$router.push({ name: 'limits.requests' })
-        Bus.success('Request rejected. Limits are not changed')
+        Bus.success('limits-reviewer.request-rejected')
       } catch (error) {
         this.isPending = false
         ErrorHandler.process(error)
@@ -458,6 +457,7 @@ export default {
     },
 
     async requireDocsRequest () {
+      if (!this.isDatalistFormValid()) return
       this.isPending = true
       try {
         const requireDocsDetails = JSON.stringify({
@@ -471,7 +471,7 @@ export default {
           reason: requireDocsDetails,
           isPermanent: false,
         })
-        Bus.success('Upload additional documents requested.')
+        Bus.success('limits-reviewer.upload-additional-documents')
         this.isRequiringDocs = false
       } catch (error) {
         this.isPending = false
@@ -493,11 +493,21 @@ export default {
       this.rejectForm.isShown = false
     },
 
+    isDatalistFormValid () {
+      const normalizedDocsList = this.getNormalizedDocsList()
+      this.uploadDocs.forEach(
+        item => { item.isDocValid = normalizedDocsList.includes(item.label) })
+      return this.uploadDocs.every(item => item.isDocValid)
+    },
+
     addMoreDoc () {
-      this.uploadDocs.push({
-        label: '',
-        description: '',
-      })
+      if (this.isDatalistFormValid()) {
+        this.uploadDocs.push({
+          label: '',
+          description: '',
+          isDocValid: true,
+        })
+      }
     },
 
     removeDoc (doc) {
@@ -517,6 +527,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../assets/scss/colors";
+@import "@/components/common/fields/scss/_fields-variables";
 .limits-reviewer__heading {
   margin-bottom: 2rem;
 }
@@ -613,5 +624,33 @@ export default {
 
 .limits-reviewer__doc-close-btn {
   font-size: 2.4rem;
+}
+.limits-reviewer__doc-label-err-transition-enter-active {
+  animation: limits-reviewer__doc-label-err-transition-keyframes
+    $field-transition-duration
+    ease-in-out;
+}
+.limits-reviewer__doc-label-err-transition-leave-active {
+  animation: limits-reviewer__doc-label-err-transition-keyframes
+    $field-transition-duration
+    ease-in-out reverse;
+}
+@keyframes limits-reviewer__doc-label-err-transition-keyframes {
+  from {
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+  }
+  to {
+    max-height: $field-error-font-size * $field-error-line-height;
+    margin-top: $field-error-margin-top;
+    overflow: hidden;
+  }
+}
+.limits-reviewer__doc-label-err-mes {
+  color: $field-color-error;
+  margin-top: $field-error-margin-top;
+  font-size: $field-error-font-size;
+  line-height: $field-error-line-height;
 }
 </style>

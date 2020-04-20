@@ -1,33 +1,33 @@
 <template>
   <div class="withdrawal-details">
-    <h2>Withdrawal details</h2>
+    <h2>{{ "withdrawal-details.header" | globalize }}</h2>
 
     <ul class="key-value-list">
       <li>
-        <span>Request ID</span>
+        <span>{{ "withdrawal-details.request-id" | globalize }}</span>
         <span>{{ request.id }}</span>
       </li>
       <li>
-        <span>Request state</span>
-        <verbose-formatter :string="request.state" />
+        <span>{{ "withdrawal-details.request-state" | globalize }}</span>
+        <span>{{ request.stateI | globalizeRequestStateI }}</span>
       </li>
       <li>
-        <span>Requestor</span>
+        <span>{{ "withdrawal-details.requestor" | globalize }}</span>
         <email-getter :account-id="request.requestor.id" is-titled />
       </li>
       <li>
-        <span>Requestor ID</span>
+        <span>{{ "withdrawal-details.requestor-id" | globalize }}</span>
         <span>{{ request.requestor.id }} </span>
       </li>
       <template v-if="request.requestDetails.creatorDetails.comment">
         <li>
-          <span>Comment</span>
+          <span>{{ "withdrawal-details.comment" | globalize }}</span>
           <span :title="request.requestDetails.creatorDetails.comment">
             {{ request.requestDetails.creatorDetails.comment }}
           </span>
         </li>
         <li>
-          <span>Hash</span>
+          <span>{{ "withdrawal-details.hash" | globalize }}</span>
           <span :title="request.hash">
             {{ request.hash }}
           </span>
@@ -35,35 +35,35 @@
       </template>
       <template v-if="request.requestDetails.creatorDetails.address">
         <li>
-          <span>Receiver address</span>
+          <span>{{ "withdrawal-details.receiver-address" | globalize }}</span>
           <span :title="request.requestDetails.creatorDetails.address">
             {{ request.requestDetails.creatorDetails.address }}
           </span>
         </li>
       </template>
       <li>
-        <span>Amount</span>
+        <span>{{ "WithdrawalDetails.amount" | globalize }}</span>
         <asset-amount-formatter
           :amount="request.requestDetails.amount"
           :asset="request.requestDetails.asset.id"
         />
       </li>
       <li>
-        <span>Fixed fee</span>
+        <span>{{ "withdrawal-details.fixed-fee" | globalize }}</span>
         <asset-amount-formatter
           :amount="request.requestDetails.fee.fixed"
           :asset="request.requestDetails.asset.id"
         />
       </li>
       <li>
-        <span>Percent fee</span>
+        <span>{{ "withdrawal-details.persent-fee" | globalize }}</span>
         <asset-amount-formatter
           :amount="request.requestDetails.fee.calculatedPercent"
           :asset="request.requestDetails.asset.id"
         />
       </li>
       <li>
-        <span>Total fee</span>
+        <span>{{ "withdrawal-details.total-fee" | globalize }}</span>
         <asset-amount-formatter
           :amount="Number(request.requestDetails.fee.fixed) +
             Number(request.requestDetails.fee.calculatedPercent)"
@@ -75,15 +75,17 @@
       <button
         class="app__btn withdrawal-details__action-btn"
         @click="fulfill(request)"
-        :disabled="isSubmitting">
-        Fulfill
+        :disabled="isSubmitting"
+      >
+        {{ "withdrawal-details.btn-fulfill" | globalize }}
       </button>
 
       <button
         class="app__btn app__btn--danger withdrawal-details__action-btn"
         @click="selectForRejection(request)"
-        :disabled="isSubmitting">
-        Reject
+        :disabled="isSubmitting"
+      >
+        {{ "withdrawal-details.btn-reject" | globalize }}
       </button>
     </div>
 
@@ -99,7 +101,7 @@
       >
         <div class="app__form-row">
           <text-field
-            label="Enter reject reason"
+            :label="'withdrawal-details.lbl-enter-reject-reason' | globalize"
             v-model="rejectForm.reason"
             :disabled="formMixin.isDisabled"
             @blur="touchField('rejectForm.reason')"
@@ -115,14 +117,16 @@
         <button
           class="app__btn app__btn--danger"
           form="withdrawal-details-reject-form"
-          :disabled="formMixin.isDisabled">
-          Reject
+          :disabled="formMixin.isDisabled"
+        >
+          {{ "withdrawal-details.form-reject" | globalize }}
         </button>
         <button
           class="app__btn-secondary"
           @click="clearRejectionSelection"
-          :disabled="formMixin.isDisabled">
-          Cancel
+          :disabled="formMixin.isDisabled"
+        >
+          {{ "withdrawal-details.form-cancel" | globalize }}
         </button>
       </div>
     </modal>
@@ -134,7 +138,7 @@ import FormMixin from '@/mixins/form.mixin'
 import { required, maxLength } from '@/validators'
 
 import { EmailGetter } from '@comcom/getters'
-import { VerboseFormatter, AssetAmountFormatter } from '@comcom/formatters'
+import { AssetAmountFormatter } from '@comcom/formatters'
 
 import Modal from '@comcom/modals/Modal'
 import { confirmAction } from '@/js/modals/confirmation_message'
@@ -153,7 +157,6 @@ const REJECT_REASON_MAX_LENGTH = 255
 export default {
   components: {
     EmailGetter,
-    VerboseFormatter,
     AssetAmountFormatter,
     Modal,
   },
@@ -189,7 +192,7 @@ export default {
   computed: {
     ...mapGetters({ userAddress: getters.GET_USER_ADDRESS }),
     reviewAllowed () {
-      return this.request.stateI === REQUEST_STATES.pending &&
+      return this.request.stateI === REQUEST_STATES.pending.stateI &&
         this.userAddress === this.request.reviewer.id
     },
   },
@@ -197,12 +200,12 @@ export default {
   methods: {
     async fulfill (request) {
       if (!this.reviewAllowed) return
-      if (!await confirmAction()) return
+      if (!(await confirmAction())) return
 
       this.isSubmitting = true
       try {
         await apiHelper.requests.approveWithdraw(request)
-        Bus.success('Request fulfilled successfully.')
+        Bus.success('withdrawal-details.request-fulfilled-successfully')
         this.$emit('close-request')
       } catch (error) {
         ErrorHandler.process(error)
@@ -223,7 +226,7 @@ export default {
           request
         )
 
-        Bus.success('Request rejected succesfully.')
+        Bus.success('withdrawal-details.request-rejected-successfully')
         this.$emit('close-request')
       } catch (error) {
         ErrorHandler.process(error)
