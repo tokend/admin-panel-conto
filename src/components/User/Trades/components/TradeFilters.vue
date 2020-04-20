@@ -1,6 +1,7 @@
 <template>
   <div class="trade-filters">
     <div class="app-list-filters">
+      <p>Select pair</p>
       <select-field
         class="app-list-filters__field trade-filters__asset-selector"
         v-model="filters.pair"
@@ -102,7 +103,13 @@ export default {
 </script>
 
 <style scoped>
+.app-list-filters {
+  display: flex;
+  flex-direction: column;
+}
+
 .trade-filters__asset-selector.app-list-filters__field {
-  flex: 0.333333;
+  align-self: flex-start;
+  width: 33%;
 }
 </style>
