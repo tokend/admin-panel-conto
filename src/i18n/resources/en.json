@@ -1585,7 +1585,11 @@
       "company": "Company",
       "header-avatar": "Avatar",
       "error": "An error occurred. Please try again later.",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "baner": "Banner",
+      "description": "Description",
+      "invitation-code": "Invitation code",
+      "card-number": "Card number"
     },
     "sale-manager": {
       "header": "Sale overview",

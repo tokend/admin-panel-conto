@@ -19,10 +19,10 @@
             </span>
           </li>
           <li v-if="kycAvatarKey">
-            <span>Banner</span>
+            <span>{{ "sale-manager-syndicate-tab.baner" | globalize }}</span>
             <span>
               <user-doc-link-getter :file-key="kycBannerKey">
-                Open file
+                {{ "sale-manager-syndicate-tab.open-file" | globalize }}
               </user-doc-link-getter>
             </span>
           </li>
@@ -39,11 +39,15 @@
             <span>{{ corporate.industry }}</span>
           </li>
           <li v-if="corporate.bank_account">
-            <span>Card number</span>
+            <span>
+              {{ "sale-manager-syndicate-tab.card-number" | globalize }}
+            </span>
             <span>{{ corporate.bank_account }}</span>
           </li>
           <li v-if="corporate.invite">
-            <span>Invitation code</span>
+            <span>
+              {{ "sale-manager-syndicate-tab.invitation-code" | globalize }}
+            </span>
             <span>{{ corporate.invite }}</span>
           </li>
           <li v-if="kycAvatarKey">
@@ -60,7 +64,7 @@
           </li>
           <li v-if="kycBannerKey">
             <div class="sale-manager-corporate-tab__doc-view-wrp">
-              <h3>Banner</h3>
+              <h3>{{ "sale-manager-syndicate-tab.baner" | globalize }}</h3>
               <user-doc-getter
                 class="sale-manager-corporate-tab__doc-view"
                 :file-key="kycBannerKey"
@@ -70,7 +74,9 @@
           </li>
           <li v-if="corporate.description">
             <div class="sale-manager-corporate-tab__doc-view-wrp">
-              <h3>Description</h3>
+              <h3>
+                {{ "sale-manager-syndicate-tab.description" | globalize }}
+              </h3>
               <markdown-formatter :source="corporate.description" />
             </div>
           </li>
