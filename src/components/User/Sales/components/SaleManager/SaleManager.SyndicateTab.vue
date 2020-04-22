@@ -18,7 +18,7 @@
               </user-doc-link-getter>
             </span>
           </li>
-          <li v-if="kycAvatarKey">
+          <li v-if="kycBannerKey">
             <span>Banner</span>
             <span>
               <user-doc-link-getter :file-key="kycBannerKey">
