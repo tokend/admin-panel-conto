@@ -1,6 +1,6 @@
 <template>
   <div class="trade-filters">
-    <div class="app-list-filters">
+    <div class="app-list-filters trade-filters__block">
       <p>Select pair</p>
       <select-field
         class="app-list-filters__field trade-filters__asset-selector"
@@ -103,7 +103,7 @@ export default {
 </script>
 
 <style scoped>
-.app-list-filters {
+.trade-filters__block {
   display: flex;
   flex-direction: column;
 }
