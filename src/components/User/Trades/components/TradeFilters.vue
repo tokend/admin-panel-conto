@@ -108,7 +108,7 @@ export default {
   flex-direction: column;
 }
 
-.trade-filters__asset-selector.app-list-filters__field {
+.trade-filters__asset-selector {
   align-self: flex-start;
   width: 33%;
 }
