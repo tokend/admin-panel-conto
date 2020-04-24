@@ -15,12 +15,6 @@
         <order-book :filters="filters" />
       </div>
     </template>
-
-    <template v-else>
-      <p class="text">
-        Select pair
-      </p>
-    </template>
   </div>
 </template>
 

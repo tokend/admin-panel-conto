@@ -14,6 +14,7 @@ for further information about branching and tagging conventions.
 
 #### Fixed
 - A bug when unblocked companies don't display at list
+- Asset pair selector title in Trades tab
 - A bug with displaying field banner in SaleManager.SyndicateTab
 
 ## [1.1.0-rc.0] - 2019-10-21
