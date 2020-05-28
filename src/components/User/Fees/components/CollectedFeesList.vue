@@ -1,20 +1,20 @@
 <template>
   <div class="collected-fees-list">
-    <h2>Balances</h2>
+    <h2>{{ "collected-fees-list.header" | globalize }}</h2>
     <div class="app-list">
       <template v-if="masterBalances && masterBalances.length">
         <div class="app-list__header">
           <span class="app-list__cell app-list__cell--important">
-            Asset
+            {{ "collected-fees-list.asset" | globalize }}
           </span>
           <span class="app-list__cell app-list__cell--right">
-            Available
+            {{ "collected-fees-list.available" | globalize }}
           </span>
           <span class="app-list__cell app-list__cell--right">
-            Locked
+            {{ "collected-fees-list.locked" | globalize }}
           </span>
           <span class="app-list__cell app-list__cell--right">
-            Withdrawable
+            {{ "collected-fees-list.withdrawable" | globalize }}
           </span>
         </div>
 
@@ -31,26 +31,22 @@
             {{ balance.assetCode }}
           </span>
 
-          <asset-amount-formatter
+          <span
             class="app-list__cell app-list__cell--right"
-            is-titled
-            :amount="balance.available"
-            :asset="balance.assetCode"
-          />
-
-          <asset-amount-formatter
+            :title="balanceAvailable(balance) | formatMoney"
+          >
+            {{ balanceAvailable(balance) | formatMoney }}
+          </span>
+          <span
             class="app-list__cell app-list__cell--right"
-            is-titled
-            :amount="balance.locked"
-            :asset="balance.assetCode"
-          />
+            :title="balanceLocked(balance) | formatMoney"
+          >
+            {{ balanceLocked(balance) | formatMoney }}
+          </span>
 
           <span class="app-list__cell app-list__cell--right">
-            <template v-if="isAssetWithdrawable(balance.assetCode)">
-              Yes
-            </template>
-            <template v-else>
-              No
+            <template>
+              {{ isAssetWithdrawable(balance.assetCode) | yesNoFilter }}
             </template>
           </span>
         </button>
@@ -60,19 +56,19 @@
         <div class="app-list__li-like">
           <template v-if="isLoading">
             <p>
-              Loading...
+              {{ "collected-fees-list.loading" | globalize }}
             </p>
           </template>
 
           <template v-else-if="isFailed">
             <p class="danger">
-              An error occurred. Please try again later
+              {{ "collected-fees-list.error" | globalize }}
             </p>
           </template>
 
           <template v-else>
             <p>
-              Nothing here yet
+              {{ "collected-fees-list.fail-load" | globalize }}
             </p>
           </template>
         </div>
@@ -85,8 +81,6 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 
-import { AssetAmountFormatter } from '@comcom/formatters'
-
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
@@ -97,10 +91,6 @@ const EVENTS = {
 }
 
 export default {
-  components: {
-    AssetAmountFormatter,
-  },
-
   data () {
     return {
       isLoading: false,
@@ -149,9 +139,22 @@ export default {
       const asset = this.assetByCode(assetCode)
       return asset && asset.isWithdrawable
     },
+
+    balanceAvailable (balance) {
+      return {
+        value: balance.available,
+        currency: balance.assetCode,
+      }
+    },
+
+    balanceLocked (balance) {
+      return {
+        value: balance.locked,
+        currency: balance.assetCode,
+      }
+    },
   },
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

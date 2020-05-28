@@ -3,36 +3,40 @@
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
         <label class="data-caption">
-          Request details
+          {{ "sale-request-manager-details-tab.label" | globalize }}
         </label>
         <ul class="key-value-list">
           <li>
-            <span>Requestor</span>
+            <span>
+              {{ "sale-request-manager-details-tab.requestor" | globalize }}
+            </span>
             <email-getter
               :account-id="request.sale.requestor.id"
               is-titled
             />
           </li>
           <li>
-            <span>Request state</span>
-            <request-state-formatter
-              :state="request.sale.state"
-              is-colored
-            />
+            <span>
+              {{ "sale-request-manager-details-tab.request-state" | globalize }}
+            </span>
+            <span>
+              {{ request.sale.stateI | globalizeRequestStateI }}
+            </span>
           </li>
 
           <li>
-            <span>Requested at</span>
-            <date-formatter
-              :date="request.sale.createdAt"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ "sale-request-manager-details-tab.requested-at" | globalize }}
+            </span>
+            <span>
+              {{ request.sale.createdAt | formatDate }}
+            </span>
           </li>
         </ul>
 
         <template v-if="request.sale.rejectReason">
           <label class="data-caption danger">
-            Reject reason
+            {{ "sale-request-manager-details-tab.reject-reason" | globalize }}
           </label>
           <p class="text">
             {{ request.sale.rejectReason }}
@@ -46,11 +50,13 @@
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
         <label class="data-caption">
-          Asset details
+          {{ "sale-request-manager-details-tab.asset-details" | globalize }}
         </label>
         <ul class="key-value-list">
           <li>
-            <span>Name</span>
+            <span>
+              {{ "sale-request-manager-details-tab.name" | globalize }}
+            </span>
             <span>
               <template v-if="safeGet(request, 'asset.details.name')">
                 {{ request.asset.details.name }}
@@ -61,63 +67,91 @@
             </span>
           </li>
           <li>
-            <span>Code</span>
+            <span>
+              {{ "sale-request-manager-details-tab.code" | globalize }}
+            </span>
             <span>{{ request.asset.id }}</span>
           </li>
           <li>
-            <span>Initial preissued amount</span>
-            <asset-amount-formatter :amount="request.asset.maxIssuanceAmount" />
+            <span>
+              <!-- eslint-disable-next-line max-len -->
+              {{ "sale-request-manager-details-tab.initial-preissued-amount" | globalize }}
+            </span>
+            <span :title="request.asset.availableForIssuance | formatMoney">
+              {{ request.asset.availableForIssuance | formatMoney }}
+            </span>
           </li>
           <li>
-            <span>Max issuance amount</span>
-            <asset-amount-formatter :amount="request.asset.maxIssuanceAmount" />
+            <span>
+              <!-- eslint-disable-next-line max-len -->
+              {{ "sale-request-manager-details-tab.max-issuance-amount" | globalize }}
+            </span>
+            <span :title="request.asset.maxIssuanceAmount | formatMoney">
+              {{ request.asset.maxIssuanceAmount | formatMoney }}
+            </span>
           </li>
           <li>
-            <span>Preissuance signer</span>
+            <span>
+              <!-- eslint-disable-next-line max-len -->
+              {{ "sale-request-manager-details-tab.preissuance-signer" | globalize }}
+            </span>
             <email-getter
               :account-id="request.asset.preIssuanceAssetSigner"
               is-titled
             />
           </li>
           <li>
-            <span>Policies</span>
+            <span>
+              {{ "sale-request-manager-details-tab.policies" | globalize }}
+            </span>
             <asset-policies-formatter
               :policy-mask="request.asset.policies.value"
             />
           </li>
           <li>
-            <span>Terms</span>
+            <span>
+              {{ "sale-request-manager-details-tab.terms" | globalize }}
+            </span>
             <span>
               <template v-if="safeGet(request, 'asset.details.terms.key')">
                 <doc-link-getter :file-key="request.asset.details.terms.key">
-                  Open file
+                  {{ "sale-request-manager-details-tab.open-file" | globalize }}
                 </doc-link-getter>
               </template>
 
               <template v-else>
-                (No document)
+                {{ "sale-request-manager-details-tab.no-document" | globalize }}
               </template>
             </span>
           </li>
           <template v-if="safeGet(request, 'asset.details.stellar.assetCode')">
             <li>
-              <span>Stellar asset code</span>
+              <span>
+                <!-- eslint-disable-next-line max-len -->
+                {{ "sale-request-manager-details-tab.stellar-asset-code" | globalize }}
+              </span>
               <span>{{ request.asset.details.stellar.assetCode }}</span>
             </li>
             <li>
-              <span>Stellar asset type</span>
-              <span>{{ stellarAssetType }}</span>
-            </li>
-            <li>
-              <span>Stellar withdraw</span>
+              <!-- eslint-disable-next-line max-len -->
+              <span>{{ "sale-request-manager-details-tab.stellar-asset-type" | globalize }}</span>
               <span>
-                {{ request.asset.details.stellar.withdraw ? 'Yes' : 'No' }}
+                {{ request.asset.details.stellar.assetType
+                  | stellarAssetTypesFilter }}
               </span>
             </li>
             <li>
-              <span>Stellar deposit</span>
+              <!-- eslint-disable-next-line max-len -->
+              <span>{{ "sale-request-manager-details-tab.stellar-withdraw" | globalize }}</span>
               <span>
-                {{ request.asset.details.stellar.deposit ? 'Yes' : 'No' }}
+                {{ request.asset.details.stellar.withdraw | yesNoFilter }}
+              </span>
+            </li>
+            <li>
+              <!-- eslint-disable-next-line max-len -->
+              <span>{{ "sale-request-manager-details-tab.stellar-deposit" | globalize }}</span>
+              <span>
+                {{ request.asset.details.stellar.deposit | yesNoFilter }}
               </span>
             </li>
           </template>
@@ -126,7 +160,7 @@
 
       <div class="sale-rm-details-tab__row-item">
         <label class="data-caption">
-          Asset logo
+          {{ "sale-request-manager-details-tab.asset-logo" | globalize }}
         </label>
         <template v-if="safeGet(request, 'asset.details.logo.key')">
           <img-getter
@@ -136,7 +170,7 @@
           />
         </template>
         <template v-else>
-          <p>(No logo yet)</p>
+          <p>{{ "sale-request-manager-details-tab.no-logo" | globalize }}</p>
         </template>
       </div>
     </div>
@@ -144,69 +178,90 @@
     <div class="sale-rm-details-tab__row">
       <div class="sale-rm-details-tab__row-item">
         <label class="data-caption">
-          Sale details
+          {{ "sale-request-manager-details-tab.sale-details" | globalize }}
         </label>
         <ul class="key-value-list">
           <li>
-            <span>Name</span>
+            <span>
+              {{ "sale-request-manager-details-tab.name" | globalize }}
+            </span>
             <span>
               <template v-if="safeGet(saleDetails, 'creatorDetails.name')">
                 {{ saleDetails.creatorDetails.name }}
               </template>
               <template v-else>
-                (Not provided yet)
+                <!-- eslint-disable-next-line max-len -->
+                {{ "sale-request-manager-details-tab.not-provided-yet" | globalize }}
               </template>
             </span>
           </li>
           <li>
-            <span>Type</span>
             <span>
-              {{ LOCALIZED_SALE_TYPES[safeGet(saleDetails, 'saleType.value')] }}
+              {{ "sale-request-manager-details-tab.type" | globalize }}
+            </span>
+            <span>
+              {{ safeGet(saleDetails, 'saleType.value')
+                | localizedSaleTypesFilter }}
             </span>
           </li>
           <li>
-            <span>Whitelisted</span>
-            <span>{{ isSaleWhitelisted ? 'Yes' : 'No' }}</span>
+            <span>
+              {{ "sale-request-manager-details-tab.whitelisted" | globalize }}
+            </span>
+            <span>{{ isSaleWhitelisted | yesNoFilter }}</span>
           </li>
           <li>
-            <span>Start time</span>
-            <date-formatter
-              :date="saleDetails.startTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ "sale-request-manager-details-tab.start-time" | globalize }}
+            </span>
+            <span>
+              {{ saleDetails.startTime | formatDate }}
+            </span>
           </li>
           <li>
-            <span>End time</span>
-            <date-formatter
-              :date="saleDetails.endTime"
-              format="DD MMM YYYY HH:mm:ss"
-            />
+            <span>
+              {{ "sale-request-manager-details-tab.end-time" | globalize }}
+            </span>
+            <span>
+              {{ saleDetails.endTime | formatDate }}
+            </span>
           </li>
           <li>
-            <span>Soft cap</span>
-            <asset-amount-formatter
-              :amount="saleDetails.softCap"
-              :asset="saleDetails.defaultQuoteAsset.id"
-            />
+            <span>
+              {{ "sale-request-manager-details-tab.soft-cap" | globalize }}
+            </span>
+            <!-- eslint-disable -->
+            <span :title="softCap | formatMoney">
+              {{ softCap | formatMoney }}
+            </span>
+            <!-- eslint-enable -->
           </li>
           <li>
-            <span>Hard cap</span>
-            <asset-amount-formatter
-              :amount="saleDetails.hardCap"
-              :asset="saleDetails.defaultQuoteAsset.id"
-            />
+            <span>
+              {{ "sale-request-manager-details-tab.hard-cap" | globalize }}
+            </span>
+            <!-- eslint-disable -->
+            <span :title="hardCap | formatMoney">
+              {{ hardCap | formatMoney }}
+            </span>
+            <!-- eslint-enable -->
           </li>
           <li>
-            <span>Max {{ saleDetails.baseAsset.id }} amount to be sold</span>
-            <asset-amount-formatter
-              :amount="saleDetails.baseAssetForHardCap"
-              :asset="saleDetails.baseAsset.id"
-            />
+            <span>
+              <!-- eslint-disable-next-line max-len -->
+              {{ "sale-request-manager-details-tab.max-amount-sold" | globalize({
+                saleDetailsBaseAssetId :saleDetails.baseAsset.id
+              })
+              }}
+            </span>
+            <span :title="baseAssetForHardCap | formatMoney">
+              {{ baseAssetForHardCap | formatMoney }}
+            </span>
           </li>
         </ul>
 
         <label class="data-caption">
-          Short description
+          {{ "sale-request-manager-details-tab.short-description" | globalize }}
         </label>
         <p
           class="text sale-rm-details-tab__short-description"
@@ -218,14 +273,15 @@
             {{ saleDetails.creatorDetails.shortDescription }}
           </template>
           <template v-else>
-            (Not provided yet)
+            <!-- eslint-disable-next-line max-len -->
+            {{ "sale-request-manager-details-tab.not-provided-yet" | globalize }}
           </template>
         </p>
       </div>
 
       <div class="sale-rm-details-tab__row-item">
         <label class="data-caption">
-          Sale logo
+          {{ "sale-request-manager-details-tab.sale-logo" | globalize }}
         </label>
         <template v-if="safeGet(saleDetails, 'creatorDetails.logo.key')">
           <img-getter
@@ -235,7 +291,9 @@
           />
         </template>
         <template v-else>
-          <p>(No logo yet)</p>
+          <p>
+            {{ "sale-request-manager-details-tab.no-logo" | globalize }}
+          </p>
         </template>
       </div>
     </div>
@@ -244,41 +302,22 @@
 
 <script>
 import { EmailGetter, ImgGetter, DocLinkGetter } from '@comcom/getters'
-import {
-  AssetAmountFormatter,
-  DateFormatter,
-  AssetPoliciesFormatter,
-  RequestStateFormatter,
-} from '@comcom/formatters'
+import { AssetPoliciesFormatter } from '@comcom/formatters'
 
-import { SALE_DEFINITION_TYPES, LOCALIZED_SALE_TYPES } from '@/constants'
+import { SALE_DEFINITION_TYPES } from '@/constants'
 
 import get from 'lodash/get'
-
-const STELLAR_TYPES = {
-  creditAlphanum4: 'credit_alphanum4',
-  creditAlphanum12: 'credit_alphanum12',
-  native: 'native',
-}
 
 export default {
   components: {
     EmailGetter,
     ImgGetter,
     DocLinkGetter,
-    AssetAmountFormatter,
-    DateFormatter,
     AssetPoliciesFormatter,
-    RequestStateFormatter,
   },
 
   props: {
     request: { type: Object, required: true },
-  },
-  data () {
-    return {
-      LOCALIZED_SALE_TYPES,
-    }
   },
 
   computed: {
@@ -291,30 +330,28 @@ export default {
         SALE_DEFINITION_TYPES.whitelist
     },
 
-    stellarAssetType () {
-      let label
-
-      switch (this.request.asset.details.stellar.assetType) {
-        case STELLAR_TYPES.creditAlphanum4:
-          label = 'Alphanumeric 4'
-          break
-
-        case STELLAR_TYPES.creditAlphanum12:
-          label = 'Alphanumeric 12'
-          break
-
-        case STELLAR_TYPES.native:
-          label = 'Native'
-          break
-
-        default:
-          label = '[UNKNOWN_STELLAR_ASSET_TYPE]'
-          break
+    baseAssetForHardCap () {
+      return {
+        value: this.saleDetails.baseAssetForHardCap,
+        currency: this.saleDetails.baseAsset.id,
       }
+    },
 
-      return label
+    softCap () {
+      return {
+        value: this.saleDetails.softCap,
+        currency: this.saleDetails.defaultQuoteAsset.id,
+      }
+    },
+
+    hardCap () {
+      return {
+        value: this.saleDetails.hardCap,
+        currency: this.saleDetails.defaultQuoteAsset.id,
+      }
     },
   },
+
   methods: {
     safeGet: get,
   },

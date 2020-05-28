@@ -4,7 +4,7 @@
       <div class="issuance-rl__filters">
         <select-field
           class="issuance-rl__filter app-list-filters__field"
-          label="Asset"
+          :label="'issuance-history.lbl-asset' | globalize"
           v-model="filters.asset"
         >
           <option
@@ -23,19 +23,19 @@
         <ul class="app-list">
           <div class="app-list__header issuance-rl__li-header">
             <span class="app-list__cell issuance-rl__id-max-width">
-              ID
+              {{ "issuance-history.id" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Value
+              {{ "issuance-history.value" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Requestor
+              {{ "issuance-history.requestor" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Receiver
+              {{ "issuance-history.receiver" | globalize }}
             </span>
             <span class="app-list__cell app-list__cell--right">
-              Date
+              {{ "issuance-history.date" | globalize }}
             </span>
           </div>
           <li
@@ -53,9 +53,9 @@
             <!-- eslint-disable max-len -->
             <span
               class="app-list__cell app-list__cell--right app-list__cell--important"
-              :title="`${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`"
+              :title="amount(item) | formatMoney"
             >
-              {{ localize(item.requestDetails.amount) }} {{ item.requestDetails.asset.id }}
+              {{ amount(item) | formatMoney }}
             </span>
             <!-- eslint-enable max-len -->
 
@@ -77,7 +77,7 @@
               class="app-list__cell app-list__cell--right  app-list__cell--wrap"
               :title="item.createdAt"
             >
-              {{ item.createdAt | dateTime }}
+              {{ item.createdAt | formatDateDMYT }}
             </span>
           </li>
         </ul>
@@ -86,7 +86,12 @@
       <template v-else>
         <div class="app-list">
           <div class="app-list__li-like app-list__li--no-shadow">
-            <p>{{ isLoaded ? 'Nothing here yet' : 'Loading...' }}</p>
+            <p v-if="isLoaded">
+              {{ "issuance-history.fail-load" | globalize }}
+            </p>
+            <p v-else>
+              {{ "issuance-history.loading" | globalize }}
+            </p>
           </div>
         </div>
       </template>
@@ -116,6 +121,15 @@ export default {
     Bus.$on('issuance:updateRequestList', _ => {
       this.reloadCollectionLoader()
     })
+  },
+
+  methods: {
+    amount (item) {
+      return {
+        value: item.requestDetails.amount,
+        currency: item.requestDetails.asset.id,
+      }
+    },
   },
 }
 </script>

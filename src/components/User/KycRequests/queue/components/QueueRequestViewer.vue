@@ -5,7 +5,9 @@
         <section class="queue-request-viewer__section">
           <div class="queue-request-viewer__account-role">
             <span>
-              <strong>Role to set:</strong>
+              <strong>
+                {{ "queue-request-viewer.role-to-set" | globalize }}
+              </strong>
               <span>
                 {{ request.accountRoleToSet | roleIdToString }}
               </span>
@@ -14,7 +16,7 @@
 
           <template v-if="request.externalDetails.length">
             <div class="queue-request-viewer__ext-details-wrp">
-              <h3>External details (provided by external services)</h3>
+              <h3>{{ "queue-request-viewer.external-details" | globalize }}</h3>
               <external-details-viewer
                 :external-details="request.externalDetails"
               />
@@ -25,7 +27,6 @@
         <section class="queue-request-viewer__section">
           <account-section
             :user="user"
-            :original-role="String(user.role)"
           />
         </section>
 
@@ -65,23 +66,23 @@
 
           <template v-else-if="isKycLoadFailed">
             <p class="danger">
-              An error occurred. Please try again later.
+              {{ "queue-request-viewer.error" | globalize }}
             </p>
           </template>
 
           <template v-else>
-            <p>Loading...</p>
+            <p>{{ "queue-request-viewer.loading" | globalize }}</p>
           </template>
         </section>
       </template>
 
       <template v-else-if="!isFailed">
-        <p>Loading...</p>
+        <p>{{ "queue-request-viewer.loading" | globalize }}</p>
       </template>
 
       <template v-else>
         <p class="danger">
-          An error occurred. Please try again later.
+          {{ "queue-request-viewer.error" | globalize }}
         </p>
       </template>
     </div>
@@ -99,13 +100,14 @@ import AccreditedKycViewer from '@/components/User/Users/components/UserDetails/
 
 import QueueRequestDocuments from './QueueRequestDocuments'
 import ExternalDetailsViewer from '@/components/User/Users/components/UserDetails/UserDetails.ExternalDetailsViewer'
+import apiHelper from '@/apiHelper'
+import deepCamelCase from 'camelcase-keys-deep'
 
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 import { ChangeRoleRequest } from '@/apiHelper/responseHandlers/requests/ChangeRoleRequest'
 import { fromKycTemplate } from '@/utils/kyc-tempater'
-import deepCamelCase from 'camelcase-keys-deep'
 
 import { mapGetters } from 'vuex'
 
@@ -161,10 +163,9 @@ export default {
       this.isFailed = false
 
       try {
-        const { data: users } = await api.getWithSignature('/identities', {
-          filter: { address: this.request.requestor },
-        })
-        this.user = users[0]
+        this.user = await apiHelper.users.getUserByAccountId(
+          this.request.requestor
+        )
         this.isLoaded = true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)

@@ -11,10 +11,10 @@
             <span>{{ corporate.company }}</span>
           </li>
           <li v-if="kycAvatarKey">
-            <span>Avatar</span>
+            <span>{{ "sale-manager-syndicate-tab.avatar" | globalize }}</span>
             <span>
               <user-doc-link-getter :file-key="kycAvatarKey">
-                Open file
+                {{ "sale-manager-syndicate-tab.open-file" | globalize }}
               </user-doc-link-getter>
             </span>
           </li>
@@ -48,7 +48,9 @@
           </li>
           <li v-if="kycAvatarKey">
             <div class="sale-manager-corporate-tab__doc-view-wrp">
-              <h3>Avatar</h3>
+              <h3>
+                {{ "sale-manager-syndicate-tab.header-avatar" | globalize }}
+              </h3>
               <user-doc-getter
                 class="sale-manager-corporate-tab__doc-view"
                 :file-key="kycAvatarKey"
@@ -78,13 +80,13 @@
 
     <template v-else-if="isFailed">
       <p class="text danger">
-        An error occurred. Please try again later.
+        {{ "sale-manager-syndicate-tab.error" | globalize }}
       </p>
     </template>
 
     <template v-else>
       <p class="text">
-        Loading...
+        {{ "sale-manager-syndicate-tab.loading" | globalize }}
       </p>
     </template>
   </div>
@@ -178,3 +180,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+  .key-value-list {
+    word-break: break-word;
+  }
+</style>

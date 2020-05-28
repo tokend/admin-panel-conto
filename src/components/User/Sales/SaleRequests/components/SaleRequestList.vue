@@ -1,37 +1,38 @@
 <template>
   <div class="sale-rl">
     <h2>
-      Sale request list
+      {{ "sale-request-list.header" | globalize }}
     </h2>
 
     <div class="sale-rl__filters-wrp">
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="State"
+          :label="'sale-request-list.lbl-state' | globalize"
           v-model="filters.state"
         >
-          <option :value="REQUEST_STATES.pending">
-            Pending
+          <option :value="REQUEST_STATES.pending.stateI">
+            {{ "sale-request-list.pending" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.cancelled">
-            Cancelled
+          <option :value="REQUEST_STATES.cancelled.stateI">
+            {{ "sale-request-list.cancelled" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.approved">
-            Approved
+          <option :value="REQUEST_STATES.approved.stateI">
+            {{ "sale-request-list.approved" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.rejected">
-            Rejected
+          <option :value="REQUEST_STATES.rejected.stateI">
+            {{ "sale-request-list.rejected" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.permanentlyRejected">
-            Permanently rejected
+          <option :value="REQUEST_STATES.permanentlyRejected.stateI">
+            {{ "sale-request-list.perm-rejected" | globalize }}
           </option>
         </select-field>
-
         <input-field
           class="app-list-filters__field sale-rl__requestor-filter"
-          label="Requestor"
-          placeholder="Address or email"
+          :label="'sale-request-list.lbl-requestor' | globalize"
+          :placeholder="
+            'sale-request-list.placeholder-address-or-email' | globalize
+          "
           v-model="filters.requestor"
           autocomplete-type="email"
         />
@@ -46,13 +47,13 @@
               <!-- empty -->
             </span>
             <span class="app-list__cell">
-              Name
+              {{ "sale-request-list.name" | globalize }}
             </span>
             <span class="app-list__cell">
-              Hard cap
+              {{ "sale-request-list.hard-cap" | globalize }}
             </span>
             <span class="app-list__cell">
-              Requestor
+              {{ "sale-request-list.requestor" | globalize }}
             </span>
           </div>
 
@@ -75,10 +76,9 @@
               {{ item.requestDetails.creatorDetails.name }}
             </span>
             <span class="app-list__cell">
-              <asset-amount-formatter
-                :amount="item.requestDetails.hardCap"
-                :asset="item.requestDetails.defaultQuoteAsset.id"
-              />
+              <span :title="hardCap(item) | formatMoney">
+                {{ hardCap(item) | formatMoney }}
+              </span>
             </span>
             <span class="app-list__cell">
               <email-getter
@@ -94,10 +94,10 @@
         <ul class="app-list">
           <li class="app-list__li-like">
             <template v-if="isLoaded">
-              Nothing here yet
+              {{ "sale-request-list.nothing-here-yet" | globalize }}
             </template>
             <template v-else>
-              Loading...
+              {{ "sale-request-list.loading" | globalize }}
             </template>
           </li>
         </ul>
@@ -124,7 +124,6 @@ import apiHelper from '@/apiHelper'
 import { base } from '@tokend/js-sdk'
 
 import { EmailGetter } from '@comcom/getters'
-import { AssetAmountFormatter } from '@comcom/formatters'
 import { CollectionLoader } from '@/components/common'
 
 import _ from 'lodash'
@@ -136,7 +135,6 @@ export default {
     SelectField,
     InputField,
     EmailGetter,
-    AssetAmountFormatter,
     CollectionLoader,
   },
 
@@ -146,7 +144,7 @@ export default {
 
       list: [],
       filters: {
-        state: REQUEST_STATES.pending,
+        state: REQUEST_STATES.pending.stateI,
         requestor: '',
       },
       isLoaded: false,
@@ -190,6 +188,13 @@ export default {
         } catch (error) {
           return requestor
         }
+      }
+    },
+
+    hardCap (item) {
+      return {
+        value: item.requestDetails.hardCap,
+        currency: item.requestDetails.defaultQuoteAsset.id,
       }
     },
 

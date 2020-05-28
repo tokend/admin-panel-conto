@@ -2,20 +2,24 @@
   <div class="accredited-kyc-viewer">
     <div class="accredited-kyc-viewer__warning-msg">
       <span class="accredited-kyc-viewer__header-title">
-        Current user is applying for Accredited KYC
+        <!-- eslint-disable-next-line max-len -->
+        {{ "user-details-accredited-kyc-viewer.user-accredited-kyc" | globalized }}
       </span>
       <span class="accredited-kyc-viewer__header-subtitle">
-        Please ensure the user attached a valid proof document
+        <!-- eslint-disable-next-line max-len -->
+        {{ "user-details-accredited-kyc-viewer.ensure-proof-document" | globalized }}
       </span>
     </div>
     <ul class="accredited-kyc-viewer__proof-document-wrp key-value-list">
       <li>
-        <span>Proof document</span>
+        <span>
+          {{ "user-details-accredited-kyc-viewer.proof-document" | globalized }}
+        </span>
         <span>
           <user-doc-link-getter
             :file-key="kyc.documents.kycProofInvestor"
           >
-            Open file
+            {{ "user-details-accredited-kyc-viewer.open-file" | globalized }}
           </user-doc-link-getter>
         </span>
       </li>
@@ -31,6 +35,7 @@
 <script>
 import GeneralKyc from './UserDetails.GeneralKyc'
 import { UserDocLinkGetter } from '@comcom/getters'
+import { UserRecord } from '@/js/records/user.record'
 
 export default {
   components: {
@@ -43,7 +48,7 @@ export default {
       required: true,
     },
     user: {
-      type: Object,
+      type: UserRecord,
       required: true,
     },
     blobId: {

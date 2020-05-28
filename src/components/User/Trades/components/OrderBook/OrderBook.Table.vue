@@ -1,23 +1,68 @@
 <template>
   <div class="order-book-table" :class="{ 'order-book-table--rtl': isRtl }">
     <div class="app__block">
-      <h2>{{ isBids ? 'Bids' : 'Asks' }}</h2>
+      <h2 v-if="isBids">
+        {{ "order-book-table.header-bids" | globalize }}
+      </h2>
+      <h2 v-else>
+        {{ "order-book-table.header-asks" | globalize }}
+      </h2>
       <template v-if="summedList && summedList.length">
         <div class="order-book-table__table-wrp">
           <table class="order-book-table__table">
             <thead>
               <tr>
                 <template v-if="isRtl">
-                  <th>Summary ({{ quoteAsset }})</th>
-                  <th>Volume ({{ quoteAsset }})</th>
-                  <th>Amount ({{ baseAsset }})</th>
-                  <th>Price ({{ quoteAsset }})</th>
+                  <th>
+                    {{ "order-book-table.summary" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.volume" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.amount" | globalize({
+                      baseAsset: baseAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.price" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
                 </template>
                 <template v-else>
-                  <th>Price ({{ quoteAsset }})</th>
-                  <th>Amount ({{ baseAsset }})</th>
-                  <th>Volume ({{ quoteAsset }})</th>
-                  <th>Summary ({{ quoteAsset }})</th>
+                  <th>
+                    {{ "order-book-table.price" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.amount" | globalize({
+                      baseAsset: baseAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.volume" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
+                  <th>
+                    {{ "order-book-table.summary" | globalize({
+                      quoteAsset: quoteAsset
+                    })
+                    }}
+                  </th>
                 </template>
               </tr>
             </thead>
@@ -31,16 +76,48 @@
                 @keyup.enter.stop.prevent="showItemDetails(item)"
                 @keyup.space.stop.prevent="showItemDetails(item)">
                 <template v-if="isRtl">
-                  <td><asset-amount-formatter :amount="item.sum" /></td>
-                  <td><asset-amount-formatter :amount="item.quoteAmount" /></td>
-                  <td><asset-amount-formatter :amount="item.baseAmount" /></td>
-                  <td><asset-amount-formatter :amount="item.price" /></td>
+                  <td>
+                    <span :title="item.sum | formatMoney">
+                      {{ item.sum | formatMoney }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.quoteAmount | formatMoney">
+                      {{ item.quoteAmount | formatMoney }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.baseAmount | formatMoney">
+                      {{ item.baseAmount | formatMoney }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.price | formatMoney">
+                      {{ item.price | formatMoney }}
+                    </span>
+                  </td>
                 </template>
                 <template v-else>
-                  <td><asset-amount-formatter :amount="item.price" /></td>
-                  <td><asset-amount-formatter :amount="item.baseAmount" /></td>
-                  <td><asset-amount-formatter :amount="item.quoteAmount" /></td>
-                  <td><asset-amount-formatter :amount="item.sum" /></td>
+                  <td>
+                    <span :title="item.price | formatMoney">
+                      {{ item.price | formatMoney }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.baseAmount | formatMoney">
+                      {{ item.baseAmount | formatMoney }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.quoteAmount | formatMoney">
+                      {{ item.quoteAmount | formatMoney }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :title="item.sum | formatMoney">
+                      {{ item.sum | formatMoney }}
+                    </span>
+                  </td>
                 </template>
               </tr>
             </tbody>
@@ -50,7 +127,7 @@
 
       <template v-else>
         <p class="text order-book-table__empty">
-          No data yet
+          {{ "order-book-table.no-data" | globalize }}
         </p>
       </template>
     </div>
@@ -60,55 +137,58 @@
       v-if="isDetailsShown"
       @close-request="hideItemDetails()"
       max-width="45rem">
-      <h2>Offer details</h2>
+      <h2>{{ "order-book-table.offer-details" | globalize }}</h2>
 
       <ul class="key-value-list">
         <li>
-          <span>ID</span>
+          <span>{{ "order-book-table.id" | globalize }}</span>
           <span>{{ itemDetails.id }}</span>
         </li>
         <li>
-          <span>Type</span>
+          <span>{{ "order-book-table.tupe" | globalize }}</span>
           <span>
             <template v-if="itemDetails.isBuy">
-              Bid
+              {{ "order-book-table.bid" | globalize }}
             </template>
             <template v-else>
-              Ask
+              {{ "order-book-table.ask" | globalize }}
             </template>
           </span>
         </li>
         <li>
-          <span>Offered at</span>
-          <date-formatter
-            :date="itemDetails.createdAt"
-            format="DD MMM YYYY [at] HH:mm:ss"
-          />
+          <span>{{ "order-book-table.offered-at" | globalize }}</span>
+          <span>
+            {{ itemDetails.createdAt | formatDate }}
+          </span>
         </li>
         <li>
-          <span>Offerer</span>
+          <span>{{ "order-book-table.offerer" | globalize }}</span>
           <email-getter :account-id="itemDetails.ownerId" is-titled />
         </li>
         <li>
-          <span>Offered amount</span>
-          <asset-amount-formatter
-            :amount="itemDetails.baseAmount"
-            :asset="itemDetails.baseAssetCode"
-          />
+          <span>{{ "order-book-table.offered-amount" | globalize }}</span>
+          <span :title="baseAmount | formatMoney">
+            {{ baseAmount | formatMoney }}
+          </span>
         </li>
         <li>
-          <span>Price per {{ itemDetails.baseAssetCode }}</span>
-          <asset-amount-formatter
-            :amount="itemDetails.price"
-            :asset="itemDetails.quoteAssetCode"
-          />
+          <span>
+            <!-- eslint-disable-next-line max-len -->
+            {{ "order-book-table.price-per-item-details-asset-code" | globalize({
+              baseAssetCode: itemDetails.baseAssetCode
+            })
+            }}
+          </span>
+          <span :title="price | formatMoney">
+            {{ price | formatMoney }}
+          </span>
         </li>
         <li>
-          <span>Total price</span>
-          <asset-amount-formatter
-            :amount="itemDetails.quoteAmount"
-            :asset="itemDetails.quoteAssetCode"
-          />
+          <span>{{ "order-book-table.total-price" | globalize }}</span>
+          <!-- eslint-disable-next-line max-len -->
+          <span :title="quoteAmount | formatMoney">
+            {{ quoteAmount | formatMoney }}
+          </span>
         </li>
       </ul>
     </modal>
@@ -118,7 +198,6 @@
 <script>
 import { AssetPair } from '../../models/AssetPair'
 
-import { AssetAmountFormatter, DateFormatter } from '@comcom/formatters'
 import { EmailGetter } from '@comcom/getters'
 import Modal from '@comcom/modals/Modal'
 
@@ -126,8 +205,6 @@ const EMPTY_DETAILS = Object.freeze({})
 
 export default {
   components: {
-    AssetAmountFormatter,
-    DateFormatter,
     EmailGetter,
     Modal,
   },
@@ -147,6 +224,27 @@ export default {
       isDetailsShown: false,
       itemDetails: Object.assign({}, EMPTY_DETAILS),
     }
+  },
+
+  computed: {
+    baseAmount () {
+      return {
+        value: this.itemDetails.baseAmount,
+        currency: this.itemDetails.baseAssetCode,
+      }
+    },
+    price () {
+      return {
+        value: this.itemDetails.price,
+        currency: this.itemDetails.quoteAssetCode,
+      }
+    },
+    quoteAmount (value) {
+      return {
+        value: this.itemDetails.quoteAmount,
+        currency: this.itemDetails.quoteAssetCode,
+      }
+    },
   },
 
   watch: {

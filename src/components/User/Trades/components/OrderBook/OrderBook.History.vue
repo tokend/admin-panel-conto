@@ -1,16 +1,31 @@
 <template>
   <div class="order-book-history">
     <div class="app__block">
-      <h2>Trade history</h2>
+      <h2>{{ "order-book-history.header" | globalize }}</h2>
       <template v-if="list && list.length">
         <div class="order-book-history__table-wrp">
           <table class="order-book-history__table">
             <thead>
               <tr>
-                <th>Price ({{ quoteAsset }})</th>
-                <th>Amount ({{ baseAsset }})</th>
-                <th>Total cost ({{ quoteAsset }})</th>
-                <th>Date</th>
+                <th>
+                  {{ "order-book-history.thead-price" | globalize({
+                    quoteAsset: quoteAsset
+                  })
+                  }}
+                </th>
+                <th>
+                  {{ "order-book-history.thead-amount" | globalize({
+                    baseAsset: baseAsset
+                  })
+                  }}
+                </th>
+                <th>
+                  {{ "order-book-history.thead-total-cost" | globalize({
+                    quoteAsset: quoteAsset
+                  })
+                  }}
+                </th>
+                <th>{{ "order-book-history.thead-date" | globalize }}</th>
               </tr>
             </thead>
 
@@ -24,21 +39,24 @@
                 @keyup.space.stop.prevent="showItemDetails(item)"
               >
                 <td>
-                  <asset-amount-formatter :amount="item.price" />
+                  <span :title="item.price | formatMoney">
+                    {{ item.price | formatMoney }}
+                  </span>
                 </td>
                 <td>
-                  <asset-amount-formatter :amount="item.baseAmount" />
+                  <span :title="item.baseAmount | formatMoney">
+                    {{ item.baseAmount | formatMoney }}
+                  </span>
                 </td>
                 <td>
-                  <asset-amount-formatter
-                    :amount="item.price * item.baseAmount"
-                  />
+                  <span :title="item.price * item.baseAmount | formatMoney">
+                    {{ item.price * item.baseAmount | formatMoney }}
+                  </span>
                 </td>
                 <td>
-                  <date-formatter
-                    :date="item.createdAt"
-                    format="DD MMM YYYY [at] HH:mm:ss"
-                  />
+                  <span>
+                    {{ item.createdAt | formatDate }}
+                  </span>
                 </td>
               </tr>
             </tbody>
@@ -48,7 +66,7 @@
 
       <template v-else>
         <p class="text order-book-history__empty">
-          No data yet
+          {{ "order-book-history.no-data" | globalize }}
         </p>
       </template>
     </div>
@@ -58,33 +76,30 @@
       v-if="isDetailsShown"
       @close-request="hideItemDetails()"
       max-width="40rem">
-      <h2>Deal details</h2>
+      <h2>{{ "order-book-history.deal-details" | globalize }}</h2>
 
       <ul class="key-value-list">
         <li>
-          <span>Deal ID</span>
+          <span>{{ "order-book-history.deal-id" | globalize }}</span>
           <span>{{ itemDetails.id }}</span>
         </li>
         <li>
-          <span>Amount</span>
-          <asset-amount-formatter
-            :amount="itemDetails.baseAmount"
-            :asset="itemDetails.baseAsset.id"
-          />
+          <span>{{ "order-book-history.amount" | globalize }}</span>
+          <span :title="baseAmountPrice | formatMoney">
+            {{ baseAmountPrice | formatMoney }}
+          </span>
         </li>
         <li>
-          <span>Price</span>
-          <asset-amount-formatter
-            :amount="itemDetails.price"
-            :asset="quoteAsset"
-          />
+          <span>{{ "order-book-history.price" | globalize }}</span>
+          <span :title="quoteAssetPrice | formatMoney">
+            {{ quoteAssetPrice | formatMoney }}
+          </span>
         </li>
         <li>
-          <span>Date</span>
-          <date-formatter
-            :date="itemDetails.createdAt"
-            format="DD MMM YYYY [at] HH:mm:ss"
-          />
+          <span>{{ "order-book-history.date" | globalize }}</span>
+          <span>
+            {{ itemDetails.createdAt | formatDate }}
+          </span>
         </li>
       </ul>
     </modal>
@@ -94,15 +109,12 @@
 <script>
 import { AssetPair } from '../../models/AssetPair'
 
-import { DateFormatter, AssetAmountFormatter } from '@comcom/formatters'
 import Modal from '@comcom/modals/Modal'
 
 const EMPTY_DETAILS = Object.freeze({})
 
 export default {
   components: {
-    AssetAmountFormatter,
-    DateFormatter,
     Modal,
   },
 
@@ -118,6 +130,21 @@ export default {
       isDetailsShown: false,
       itemDetails: Object.assign({}, EMPTY_DETAILS),
     }
+  },
+
+  computed: {
+    baseAmountPrice () {
+      return {
+        value: this.itemDetails.baseAmount,
+        currency: this.itemDetails.baseAsset.id,
+      }
+    },
+    quoteAssetPrice () {
+      return {
+        value: this.itemDetails.price,
+        currency: this.quoteAsset,
+      }
+    },
   },
 
   watch: {
