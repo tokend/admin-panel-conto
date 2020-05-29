@@ -1,18 +1,18 @@
 <template>
   <div class="general-kyc">
     <h3 class="general-kyc__title">
-      General user details
+      {{ "general-kyc.label" | globalize }}
     </h3>
     <template v-if="isLoaded">
       <ul class="general-kyc__key-value-list key-value-list">
         <li>
-          <span>First name</span>
+          <span>{{ "general-kyc.first-name" | globalize }}</span>
           <span :title="kyc.firstName">
             {{ kyc.firstName }}
           </span>
         </li>
         <li>
-          <span>Last name</span>
+          <span>{{ "general-kyc.last-name" | globalize }}</span>
           <span :title="kyc.lastName">
             {{ kyc.lastName }}
           </span>
@@ -22,7 +22,7 @@
 
     <template v-else>
       <p class="text">
-        Loading...
+        {{ "general-kyc.loading" | globalize }}
       </p>
     </template>
   </div>

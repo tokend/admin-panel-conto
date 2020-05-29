@@ -11,6 +11,7 @@ for further information about branching and tagging conventions.
 #### Added
 - Displaying expiration date for asset requests
 - Handling of transactions error
+- Merged admin-panel 1.13.0-rc.0
 
 #### Fixed
 - A bug when unblocked companies don't display at list

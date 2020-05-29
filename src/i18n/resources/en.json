@@ -1573,18 +1573,21 @@
       "progress": "{{ assetId }} progress"
     },
     "sale-manager-syndicate-tab": {
-      "label": "Corporate user details",
-      "name": "Name",
+      "label": "Business details",
       "headquarters": "Headquarters",
       "avatar": "Avatar",
       "open-file": "Open file",
-      "home-page": "Home page",
+      "website": "Website",
       "industry": "Industry",
       "team-size": "Team size",
       "company": "Company",
       "header-avatar": "Avatar",
       "error": "An error occurred. Please try again later.",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "banner": "Banner",
+      "card-number": "Card number",
+      "invitation-code": "Invitation code",
+      "description": "Description"
     },
     "sale-manager": {
       "header": "Sale overview",
@@ -1930,6 +1933,12 @@
     },
     "xdr-type-from-value": {
       "error": "xdrEnumToConstant: Cannot get values from provided xdrEnum ({{xdrEnum}})"
+    },
+    "general-kyc": {
+      "label": "General user details",
+      "first-name": "First name",
+      "last-name": "Last name",
+      "loading": "Loading..."
     }
   }
 }

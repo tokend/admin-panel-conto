@@ -3,11 +3,11 @@
     <template v-if="isLoaded">
       <div class="sale-manager-corporate-tab__details-wrp">
         <label class="data-caption">
-          Business details
+          {{ "sale-manager-syndicate-tab.label" | globalize }}
         </label>
         <ul class="key-value-list">
           <li>
-            <span>Company</span>
+            <span>{{ "sale-manager-syndicate-tab.company" | globalize }}</span>
             <span>{{ corporate.company }}</span>
           </li>
           <li v-if="kycAvatarKey">
@@ -19,31 +19,37 @@
             </span>
           </li>
           <li v-if="kycBannerKey">
-            <span>Banner</span>
+            <span>{{ "sale-manager-syndicate-tab.banner" | globalize }}</span>
             <span>
               <user-doc-link-getter :file-key="kycBannerKey">
-                Open file
+                {{ "sale-manager-syndicate-tab.open-file" | globalize }}
               </user-doc-link-getter>
             </span>
           </li>
           <li v-if="corporate.headquarters">
-            <span>Headquarters</span>
+            <span>{
+              {{ "sale-manager-syndicate-tab.headquarters" | globalize }}
+            </span>
             <span>{{ corporate.headquarters }}</span>
           </li>
           <li v-if="corporate.industry">
-            <span>Industry</span>
+            <span>{{ "sale-manager-syndicate-tab.industry" | globalize }}</span>
             <span>{{ corporate.industry }}</span>
           </li>
           <li v-if="corporate.homepage">
-            <span>Website</span>
+            <span>{{ "sale-manager-syndicate-tab.website" | globalize }}</span>
             <span>{{ corporate.homepage }}</span>
           </li>
           <li v-if="corporate.bank_account">
-            <span>Card number</span>
+            <span>
+              {{ "sale-manager-syndicate-tab.card-number" | globalize }}
+            </span>
             <span>{{ corporate.bank_account }}</span>
           </li>
           <li v-if="corporate.invite">
-            <span>Invitation code</span>
+            <span>
+              {{ "sale-manager-syndicate-tab.invitation-code" | globalize }}
+            </span>
             <span>{{ corporate.invite }}</span>
           </li>
           <li v-if="kycAvatarKey">
@@ -60,7 +66,7 @@
           </li>
           <li v-if="kycBannerKey">
             <div class="sale-manager-corporate-tab__doc-view-wrp">
-              <h3>Banner</h3>
+              <h3>{{ "sale-manager-syndicate-tab.banner" | globalize }}</h3>
               <user-doc-getter
                 class="sale-manager-corporate-tab__doc-view"
                 :file-key="kycBannerKey"
@@ -70,7 +76,9 @@
           </li>
           <li v-if="corporate.description">
             <div class="sale-manager-corporate-tab__doc-view-wrp">
-              <h3>Description</h3>
+              <h3>
+                {{ "sale-manager-syndicate-tab.description" | globalize }}
+              </h3>
               <markdown-formatter :source="corporate.description" />
             </div>
           </li>
