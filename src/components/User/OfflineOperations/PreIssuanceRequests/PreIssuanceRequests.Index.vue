@@ -1,18 +1,23 @@
 <template>
   <div class="preissuance-requests-index">
     <div class="app__block">
-      <h2>Preissuance Requests</h2>
+      <h2>{{ "pre-issuance-requests-index.header" | globalize }}</h2>
 
       <select-field
         class="preissuance-requests-index__asset-select"
         v-model="asset"
-        label="Asset">
+        :label="'pre-issuance-requests-index.lbl-asset' | globalize">
         <option
           v-for="a in assets"
           :value="a.id"
           :key="a.id"
         >
-          {{ a.id }}
+          <template v-if="a.id === ALL_ASSETS_ID">
+            {{ 'pre-issuance-requests-index.all' | globalize }}
+          </template>
+          <template v-else>
+            {{ a.id }}
+          </template>
         </option>
       </select-field>
 
@@ -30,7 +35,7 @@
 import PreIssuanceRequestList from './components/PreIssuanceRequestList.vue'
 import SelectField from '@comcom/fields/SelectField'
 import { api, loadingDataViaLoop } from '@/api'
-
+import { ALL_ASSETS_ID } from '@/constants'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
@@ -41,7 +46,8 @@ export default {
 
   data () {
     return {
-      asset: [{ id: 'All' }],
+      ALL_ASSETS_ID,
+      asset: [{ id: ALL_ASSETS_ID }],
       assets: undefined,
       assetsLoaded: false,
     }
@@ -55,7 +61,7 @@ export default {
     },
 
     availableAmount () {
-      if (this.asset === 'All') {
+      if (this.asset === ALL_ASSETS_ID) {
         return 0
       }
       return +this.assetInfo.available_for_issuance
@@ -73,7 +79,7 @@ export default {
         let response = await api.getWithSignature('/v3/assets')
         let assets = await loadingDataViaLoop(response)
         this.assets = [{
-          id: 'All',
+          id: ALL_ASSETS_ID,
         }].concat(assets)
         this.asset = this.assets[0].id
         this.assetsLoaded = true

@@ -1,7 +1,7 @@
 import config from '@/config'
 import { base } from '@tokend/js-sdk'
 
-import { REQUEST_TYPES } from '@/constants'
+import { REQUEST_TYPES, ALL_ASSETS_ID } from '@/constants'
 
 import { CreatePreIssuanceRequest } from './responseHandlers/requests/CreatePreIssuanceRequest'
 import { AssetRequest } from './responseHandlers/requests/AssetRequest'
@@ -9,7 +9,7 @@ import { IssuanceCreateRequest } from './responseHandlers/requests/IssuanceCreat
 
 import _get from 'lodash/get'
 import { api } from '@/api'
-
+import { globalize } from '@/components/App/filters/filters'
 export const requests = {
   _review ({ action, reason = '' }, ...requests) {
     const operations = requests.map(function (item) {
@@ -200,7 +200,7 @@ export const requests = {
   },
 
   async getPreissuanceRequests (asset) {
-    if (asset.toLowerCase() === 'all') {
+    if (asset.toLowerCase() === ALL_ASSETS_ID) {
       asset = ''
     }
     const endpoint = '/v3/create_pre_issuance_requests'
@@ -233,7 +233,10 @@ function mapRequests (records) {
       case REQUEST_TYPES.createPreIssuance:
         return new CreatePreIssuanceRequest(record)
       default:
-        throw new Error(`Unknown reviewable request type: ${type}`)
+        throw new Error(globalize('requests.unknown-request-type', {
+          type: type,
+        })
+        )
     }
   })
 }

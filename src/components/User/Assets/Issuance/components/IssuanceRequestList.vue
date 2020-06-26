@@ -4,22 +4,22 @@
       <div class="issuance-rl__filters">
         <select-field
           class="issuance-rl__filter app-list-filters__field"
-          label="State"
+          :label="'issuance-request-list.lbl-state' | globalize"
           v-model="filters.state"
         >
-          <option :value="REQUEST_STATES.pending">
-            Pending
+          <option :value="REQUEST_STATES.pending.stateI">
+            {{ "issuance-request-list.pending" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.approved">
-            Approved
+          <option :value="REQUEST_STATES.approved.stateI">
+            {{ "issuance-request-list.approved" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.permanentlyRejected">
-            Permanently rejected
+          <option :value="REQUEST_STATES.permanentlyRejected.stateI">
+            {{ "issuance-request-list.perm-rejected" | globalize }}
           </option>
         </select-field>
         <select-field
           class="issuance-rl__filter app-list-filters__field"
-          label="Asset"
+          :label="'issuance-form.lbl-asset' | globalize"
           v-model="filters.asset"
         >
           <option
@@ -38,15 +38,15 @@
         <ul class="app-list">
           <div class="app-list__header issuance-rl__li-header">
             <span class="app-list__cell">
-              Value
+              {{ "issuance-request-list.value" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Date
+              {{ "issuance-request-list.date" | globalize }}
             </span>
 
             <span class="app-list__cell">
-              Requestor
+              {{ "issuance-request-list.requestor" | globalize }}
             </span>
           </div>
           <li
@@ -59,24 +59,22 @@
             >
               <span
                 class="app-list__cell app-list__cell--important"
-                :title="
-                  // eslint-disable-next-line max-len
-                  `${localize(item.requestDetails.amount)} ${item.requestDetails.asset.id}`
-                "
+                :title="amount(item) | formatMoney"
               >
-                {{ localize(item.requestDetails.amount) }}
-                {{ item.requestDetails.asset.id }}
+                {{ amount(item) | formatMoney }}
               </span>
 
               <span
                 class="app-list__cell app-list__cell--wrap"
-                :title="item.createdAt">
-                {{ item.createdAt | dateTime }}
+                :title="item.createdAt"
+              >
+                {{ item.createdAt | formatDateDMYT }}
               </span>
 
               <span
                 class="app-list__cell"
-                :title="item.requestor.id">
+                :title="item.requestor.id"
+              >
                 {{ item.requestor.id }}
               </span>
             </router-link>
@@ -87,7 +85,12 @@
       <template v-else>
         <div class="app-list">
           <div class="app-list__li-like app-list__li--no-shadow">
-            <p>{{ isLoaded ? 'Nothing here yet' : 'Loading...' }}</p>
+            <p v-if="isLoaded">
+              {{ "issuance-request-list.fail-load" | globalize }}
+            </p>
+            <p v-else>
+              {{ "issuance-request-list.loading" | globalize }}
+            </p>
           </div>
         </div>
       </template>
@@ -109,6 +112,14 @@ import IssuanceMixin from './issuance.mixin'
 
 export default {
   mixins: [IssuanceMixin],
+  methods: {
+    amount (item) {
+      return {
+        value: item.requestDetails.amount,
+        currency: item.requestDetails.asset.id,
+      }
+    },
+  },
 }
 </script>
 

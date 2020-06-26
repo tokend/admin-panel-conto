@@ -4,24 +4,26 @@
       <div class="app-list-filters">
         <select-field
           class="app-list-filters__field"
-          label="State"
-          v-model="filters.state">
-          <option :value="REQUEST_STATES.pending">
-            Pending
+          :label="'withdrawal-list.lbl-state' | globalize"
+          v-model="filters.state"
+        >
+          <option :value="REQUEST_STATES.pending.stateI">
+            {{ "withdrawal-list.pending" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.approved">
-            Approved
+          <option :value="REQUEST_STATES.approved.stateI">
+            {{ "withdrawal-list.approved" | globalize }}
           </option>
-          <option :value="REQUEST_STATES.permanentlyRejected">
-            Permanently rejected
+          <option :value="REQUEST_STATES.permanentlyRejected.stateI">
+            {{ "withdrawal-list.perm-rejected" | globalize }}
           </option>
         </select-field>
 
         <select-field
           v-if="assets.length"
           class="app-list-filters__field"
-          label="Asset"
-          v-model="filters.asset">
+          :label="'withdrawal-list.lbl-asset' | globalize"
+          v-model="filters.asset"
+        >
           <option
             :value="item.id"
             v-for="item in assets"
@@ -34,19 +36,18 @@
         <select-field
           v-else
           class="app-list-filters__field"
-          label="Asset"
+          :label="'withdrawal-list.lbl-asset' | globalize"
           value="no-assets"
           disabled
         >
           <option value="no-assets">
-            No withdrawable assets
+            {{ "withdrawal-list.no-assets" | globalize }}
           </option>
         </select-field>
 
         <input-field
           class="app-list-filters__field"
-          label="Requestor"
-          placeholder="Requestor"
+          :placeholder="'withdrawal-list.placeholder-requestor' | globalize"
           autocomplete-type="email"
           v-model="filters.requestor"
         />
@@ -58,13 +59,13 @@
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              Amount
+              {{ "withdrawal-list.amount" | globalize }}
             </span>
             <span class="app-list__cell">
-              Status
+              {{ "withdrawal-list.status" | globalize }}
             </span>
             <span class="app-list__cell">
-              Requestor
+              {{ "withdrawal-list.requestor" | globalize }}
             </span>
           </div>
 
@@ -72,13 +73,12 @@
             class="app-list__li"
             v-for="item in list"
             :key="item.id"
-            @click="requestToShow = item">
-            <!-- eslint-disable max-len -->
+            @click="requestToShow = item"
+          >
             <span class="app-list__cell">
-              <asset-amount-formatter
-                :amount="item.requestDetails.amount"
-                :asset="item.requestDetails.asset.id"
-              />
+              <span :title="assetAmount(item) | formatMoney">
+                {{ assetAmount(item) | formatMoney }}
+              </span>
             </span>
 
             <span class="app-list__cell" :title="verbozify(item.state)">
@@ -96,10 +96,10 @@
         <ul class="app-list">
           <li class="app-list__li-like">
             <template v-if="isLoaded">
-              Nothing here yet
+              {{ "withdrawal-list.fail-load" | globalize }}
             </template>
             <template v-else>
-              Loading...
+              {{ "withdrawal-list.loading" | globalize }}
             </template>
           </li>
         </ul>
@@ -119,10 +119,12 @@
     <modal
       v-if="requestToShow && requestToShow.id"
       @close-request="requestToShow = null"
-      max-width="60rem">
+      max-width="60rem"
+    >
       <withdrawal-details
         :request="requestToShow"
-        @close-request="refreshList" />
+        @close-request="refreshList"
+      />
     </modal>
   </div>
 </template>
@@ -130,7 +132,6 @@
 <script>
 import SelectField from '@comcom/fields/SelectField'
 import InputField from '@comcom/fields/InputField'
-import { AssetAmountFormatter } from '@comcom/formatters'
 import { CollectionLoader } from '@/components/common'
 
 import Modal from '@comcom/modals/Modal'
@@ -156,7 +157,6 @@ export default {
     InputField,
     Modal,
     WithdrawalDetails,
-    AssetAmountFormatter,
     CollectionLoader,
   },
 
@@ -169,7 +169,7 @@ export default {
       list: {},
       requestToShow: {},
       filters: {
-        state: REQUEST_STATES.pending,
+        state: REQUEST_STATES.pending.stateI,
         asset: '',
         requestor: '',
       },
@@ -200,8 +200,8 @@ export default {
         let response = await api.getWithSignature('/v3/assets')
         let data = await loadingDataViaLoop(response)
         this.assets = data
-          .filter(item => (item.policies.value & ASSET_POLICIES.withdrawable))
-          .sort((assetA, assetB) => assetA.id > assetB.id ? 1 : -1)
+          .filter(item => item.policies.value & ASSET_POLICIES.withdrawable)
+          .sort((assetA, assetB) => (assetA.id > assetB.id ? 1 : -1))
 
         if (this.assets.length) {
           this.filters.asset = this.assets[0].id
@@ -216,8 +216,9 @@ export default {
       this.isNoMoreEntries = false
       let response = {}
       try {
-        const requestor =
-          await this.getRequestorAccountId(this.filters.requestor)
+        const requestor = await this.getRequestorAccountId(
+          this.filters.requestor
+        )
         response = await api.getWithSignature('/v3/create_withdraw_requests', {
           filter: {
             state: this.filters.state,
@@ -263,12 +264,19 @@ export default {
     reloadCollectionLoader () {
       this.$refs.collectionLoaderBtn.loadFirstPage()
     },
+
+    assetAmount (item) {
+      return {
+        value: item.requestDetails.amount,
+        currency: item.requestDetails.asset.id,
+      }
+    },
   },
 }
 </script>
 
 <style scoped>
-  .withdrawal-list__filters-wrp {
-    margin-bottom: 4rem;
-  }
+.withdrawal-list__filters-wrp {
+  margin-bottom: 4rem;
+}
 </style>

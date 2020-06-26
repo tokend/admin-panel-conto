@@ -1,58 +1,57 @@
 <template>
   <div class="issuance-details">
     <div class="issuance-details app__block">
-      <h2>Issuance details</h2>
+      <h2>{{ "issuance-details.header" | globalize }}</h2>
       <template v-if="isLoaded">
         <ul class="key-value-list">
           <li class="issuance-details__list-item">
-            <span>ID</span>
+            <span>{{ "issuance-details.id" | globalize }}</span>
             <span>{{ issuance.id }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Date</span>
-            <span>{{ issuance.createdAt | dateTime }}</span>
+            <span>{{ "issuance-details.date" | globalize }}</span>
+            <span>{{ issuance.createdAt | formatDateDMYT }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Initiator</span>
+            <span>{{ "issuance-details.initiator" | globalize }}</span>
             <span>{{ issuance.requestor.id }}</span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Initiator (Email)</span>
+            <span>{{ "issuance-details.initiator-mail" | globalize }}</span>
             <span>
               <email-getter :account-id="issuance.requestor.id" is-titled />
             </span>
           </li>
           <li class="issuance-details__list-item">
-            <span>Value</span>
-            <span>
-              {{ localize(issuance.requestDetails.amount) }}
-              {{ issuance.requestDetails.asset.id }}
+            <span>{{ "issuance-details.value" | globalize }}</span>
+            <span :title="amount | formatMoney">
+              {{ amount | formatMoney }}
             </span>
           </li>
           <li class="issuance-details__list-item">
-            <span>State</span>
+            <span>{{ "issuance-details.state" | globalize }}</span>
             <span>
-              {{ issuance.state | localizeIssuanceRequestState }}
+              {{ issuance.stateI | globalizeRequestStateI }}
             </span>
           </li>
         </ul>
-        <template v-if="issuance.stateI === REQUEST_STATES.pending">
+        <template v-if="issuance.stateI === REQUEST_STATES.pending.stateI">
           <div class="issuance-details__action-btns">
             <!-- eslint-disable max-len -->
             <button
               class="app__btn issuance-details__action-btn"
               @click="fulfill(issuance)"
-              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
+              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending.stateI"
             >
-              Fulfill
+              {{ "issuance-details.fulfill" | globalize }}
             </button>
 
             <button
               class="app__btn app__btn--danger issuance-details__action-btn"
               @click="selectForRejection(issuance)"
-              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending"
+              :disabled="isSubmitting || issuance.stateI !== REQUEST_STATES.pending.stateI"
             >
-              Reject
+              {{ "issuance-details.reject" | globalize }}
             </button>
             <!-- eslint-enable max-len -->
           </div>
@@ -60,7 +59,7 @@
       </template>
       <template v-else>
         <span class="issuance-details__list-item">
-          Loading...
+          {{ "issuance-details.loading" | globalize }}
         </span>
       </template>
       <modal
@@ -76,7 +75,7 @@
         >
           <div class="app__form-row">
             <text-field
-              label="Enter reject reason"
+              :label="'issuance-details.lbl-enter-reject-reason' | globalize"
               v-model="rejectForm.reason"
               :disabled="formMixin.isDisabled"
               @blur="touchField('rejectForm.reason')"
@@ -94,14 +93,14 @@
             form="issuance-rl-reject-form"
             :disabled="formMixin.isDisabled"
           >
-            Reject
+            {{ "issuance-details.btn-reject" | globalize }}
           </button>
           <button
             class="app__btn-secondary"
             @click="clearRejectionSelection"
             :disabled="formMixin.isDisabled"
           >
-            Cancel
+            {{ "issuance-details.btn-cancel" | globalize }}
           </button>
         </div>
       </modal>
@@ -120,8 +119,6 @@ import { confirmAction } from '../../../../js/modals/confirmation_message'
 
 import apiHelper from '@/apiHelper'
 import { REQUEST_STATES } from '@/constants'
-
-import localize from '@/utils/localize'
 
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
@@ -152,6 +149,15 @@ export default {
     REJECT_REASON_MAX_LENGTH,
   }),
 
+  computed: {
+    amount () {
+      return {
+        value: this.issuance.requestDetails.amount,
+        currency: this.issuance.requestDetails.asset.id,
+      }
+    },
+  },
+
   validations () {
     return {
       rejectForm: {
@@ -169,8 +175,6 @@ export default {
   },
 
   methods: {
-    localize,
-
     async getIssuance (id) {
       try {
         this.issuance = await apiHelper.requests.get(id)
@@ -193,7 +197,7 @@ export default {
           })
 
           await this.getIssuance(this.id)
-          Bus.success('Request fulfilled successfully.')
+          Bus.success('issuance-details.request-fulfilled-successfully')
         } catch (error) {
           ErrorHandler.processWithoutFeedback(error)
         }
@@ -227,7 +231,7 @@ export default {
 
         await this.getIssuance(this.id)
         this.clearRejectionSelection()
-        Bus.success('Request rejected successfully.')
+        Bus.success('issuance-details.request-rejected-successfully')
       } catch (error) {
         ErrorHandler.process(error)
       }

@@ -9,9 +9,9 @@
           <input-field
             class="app__form-field"
             type="text"
-            placeholder="email@example.com or GAAQ..."
+            :placeholder="'issuance-form.placeholder-email-or-gaaq' | globalize"
             v-model="form.receiver"
-            label="Receiver (email or address)"
+            :label="'issuance-form.lbl-receiver' | globalize"
             @blur="touchField('form.receiver')"
             :error-message="getFieldErrorMessage('form.receiver')"
             :disabled="formMixin.isDisabled"
@@ -23,8 +23,9 @@
           <input-field
             class="app__form-field"
             v-model="form.reference"
-            label="Reference"
+            :label="'issuance-form.lbl-reference' | globalize"
             @blur="touchField('form.reference')"
+            :maxlength="REFERENCE_MAX_LENGTH"
             :error-message="getFieldErrorMessage(
               'form.reference',
               { maxLength: REFERENCE_MAX_LENGTH }
@@ -41,14 +42,11 @@
             :min="DEFAULT_INPUT_MIN"
             :max="availableForIssuance"
             v-model="form.amount"
-            label="Amount"
+            :label="'issuance-form.lbl-amount' | globalize"
             @blur="touchField('form.amount')"
             :error-message="getFieldErrorMessage(
               'form.amount',
-              {
-                minValue: DEFAULT_INPUT_MIN,
-                available: availableForIssuance
-              }
+              { minValue: DEFAULT_INPUT_MIN, available: availableForIssuance }
             )"
             :disabled="formMixin.isDisabled"
           />
@@ -57,7 +55,7 @@
             <select-field
               class="issuance-form__asset-select"
               v-model="form.asset"
-              label="Asset"
+              :label="'issuance-form.lbl-asset' | globalize"
               @blur="touchField('form.asset')"
               :error-message="getFieldErrorMessage('form.asset')"
               :disabled="formMixin.isDisabled"
@@ -75,15 +73,14 @@
 
         <div class="issuance-form__asset-info app__form-row" v-if="form.asset">
           <p v-if="isIssuanceAllowed" class="text">
-            <span>Available:</span>
-            <asset-amount-formatter
-              :amount="availableForIssuance"
-              :asset="form.asset"
-            />
+            <span>{{ "issuance-form.avaible" | globalize }}</span>
+            <span :title="assetAvailableForIssuance | formatMoney">
+              {{ assetAvailableForIssuance | formatMoney }}
+            </span>
           </p>
 
           <p v-else class="text">
-            No available assets left
+            {{ "issuance-form.no-avaible" | globalize }}
           </p>
         </div>
 
@@ -91,9 +88,11 @@
           <form-confirmation
             v-if="formMixin.isConfirmationShown"
             :is-pending="isFormSubmitting"
-            message="Please, recheck all the fields"
+            :message="'issuance-form.msg-please-recheck-all-fields' | globalize"
             @ok="submit"
             @cancel="hideConfirmation"
+            :ok-button-text="'issuance-form.btn-confirm' | globalize"
+            :cancel-button-text="'issuance-form.btn-cancel' | globalize"
           />
 
           <button
@@ -101,14 +100,14 @@
             class="app__btn"
             :disabled="formMixin.isDisabled || !isIssuanceAllowed"
           >
-            Issue
+            {{ "issuance-form.issue" | globalize }}
           </button>
         </div>
       </form>
     </template>
 
     <template v-else>
-      <p>Loading...</p>
+      <p>{{ "issuance-form.loading" | globalize }}</p>
       <!-- TODO: better loading -->
     </template>
   </div>
@@ -116,7 +115,6 @@
 
 <script>
 import FormMixin from '@/mixins/form.mixin'
-import { AssetAmountFormatter } from '@comcom/formatters'
 import { api, loadingDataViaLoop } from '@/api'
 import apiHelper from '@/apiHelper'
 import { base } from '@tokend/js-sdk'
@@ -124,7 +122,7 @@ import { base } from '@tokend/js-sdk'
 import config from '@/config'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { Bus } from '@/utils/bus'
-
+import { globalize } from '@/components/App/filters/filters'
 import {
   required,
   minValue,
@@ -135,10 +133,9 @@ import {
 
 import { DEFAULT_INPUT_STEP, DEFAULT_INPUT_MIN } from '@/constants'
 
-const REFERENCE_MAX_LENGTH = 255
+const REFERENCE_MAX_LENGTH = 64
 
 export default {
-  components: { AssetAmountFormatter },
   mixins: [FormMixin],
 
   data () {
@@ -186,6 +183,12 @@ export default {
     isIssuanceAllowed () {
       return this.availableForIssuance > 0
     },
+    assetAvailableForIssuance () {
+      return {
+        value: this.availableForIssuance,
+        currency: this.form.asset,
+      }
+    },
   },
 
   created () {
@@ -221,7 +224,7 @@ export default {
 
       if (!address) {
         // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject(`Account doesn't exists in the system`)
+        return Promise.reject(globalize('issuance-form.account-not-exists'))
       }
       const { data } = await api.getWithSignature(`/v3/accounts/${address}`, {
         include: ['balances', 'balances.asset'],
@@ -256,21 +259,26 @@ export default {
 
     async sendManualIssuance (receiver) {
       if (receiver === '') {
-        throw new Error(`The receiver has no ${this.form.asset} balance.`)
+        throw new Error(globalize('issuance-form.error', {
+          asset: this.form.asset,
+        })
+        )
       }
       const operation = base.CreateIssuanceRequestBuilder
-        .createIssuanceRequest({
-          asset: this.form.asset,
-          amount: this.form.amount,
-          receiver: receiver,
-          reference: this.form.reference,
-          source: config.MASTER_ACCOUNT,
-          creatorDetails: {},
-          allTasks: 0,
-        })
+        .createIssuanceRequest(
+          {
+            asset: this.form.asset,
+            amount: this.form.amount,
+            receiver: receiver,
+            reference: this.form.reference,
+            source: config.MASTER_ACCOUNT,
+            creatorDetails: {},
+            allTasks: 0,
+          }
+        )
       await api.postOperations(operation)
 
-      Bus.success('Issued successfully')
+      Bus.success('issuance-form.issued-successfully')
       this.getAssets()
     },
 

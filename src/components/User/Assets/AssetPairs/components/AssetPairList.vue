@@ -8,11 +8,11 @@
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            Price
+            {{ "asset-pair-list.price" | globalize }}
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            Policy
+            {{ "asset-pair-list.policy" | globalize }}
           </span>
         </div>
 
@@ -30,11 +30,12 @@
           </span>
 
           <span class="app-list__cell app-list__cell--right">
-            <asset-amount-formatter
-              :amount="item.price"
-              :asset="item.quoteAsset.id"
-            />
+            <!-- eslint-disable -->
+            <span :title="assetPairPrice(item) | formatMoney">
+              {{ assetPairPrice(item) | formatMoney }}
+            </span>
           </span>
+          <!-- eslint-enable -->
 
           <!-- eslint-disable-next-line max-len -->
           <span class="app-list__cell app-list__cell--policy app-list__cell--right">
@@ -47,13 +48,13 @@
                   v-for="(policy, i) in item.policies.flags"
                   :key="i"
                 >
-                  {{ ASSET_PAIR_POLICIES_VERBOSE[policy.value] }}
+                  {{ ASSET_PAIR_POLICIES_VERBOSE[policy.value] | globalize }}
                 </span>
                 <span
                   v-if="!item.policies || !item.policies.length"
                   class="asset-pairs__policies-list-item"
                 >
-                  No policies for this pair
+                  {{ "asset-pair-list.no-policy" | globalize }}
                 </span>
               </span>
             </span>
@@ -65,7 +66,7 @@
     <template v-else-if="isLoaded && !list.length">
       <div class="app-list">
         <div class="app-list__li-like">
-          <p>Nothing here yet</p>
+          <p>{{ "asset-pair-list.nothing-here-yet" | globalize }}</p>
         </div>
       </div>
     </template>
@@ -74,7 +75,7 @@
       <div class="app-list">
         <div class="app-list__li-like">
           <p class="danger">
-            An error occurred. Please try again later
+            {{ "asset-pair-list.error" | globalize }}
           </p>
         </div>
       </div>
@@ -83,7 +84,7 @@
     <template v-else>
       <div class="app-list">
         <div class="app-list__li-like">
-          <p>Loading...</p>
+          <p>{{ "asset-pair-list.loading" | globalize }}</p>
         </div>
       </div>
     </template>
@@ -100,7 +101,6 @@
 
 <script>
 import { CollectionLoader } from '@/components/common'
-import { AssetAmountFormatter } from '@comcom/formatters'
 
 import { api } from '@/api'
 import { ASSET_PAIR_POLICIES_VERBOSE } from '@/constants'
@@ -109,7 +109,6 @@ import { ErrorHandler } from '@/utils/ErrorHandler'
 
 export default {
   components: {
-    AssetAmountFormatter,
     CollectionLoader,
   },
 
@@ -142,6 +141,10 @@ export default {
       this.list = data
     },
 
+    assetPairPrice (item) {
+      return { value: item.price, currency: item.quoteAsset.id }
+    },
+
     extendList (data) {
       this.list = this.list.concat(data)
     },
@@ -149,7 +152,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .asset-pairs {
   max-width: 72rem;
 }
@@ -187,7 +190,7 @@ export default {
 
 .asset-pairs__tip-icon {
   cursor: help;
-  padding: .5rem;
+  padding: 0.5rem;
   width: 2.6rem;
 }
 </style>
