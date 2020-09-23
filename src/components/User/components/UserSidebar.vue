@@ -90,13 +90,6 @@
           <span>{{ "user-sidebar.link-key-value" | globalize }}</span>
         </router-link>
       </li>
-
-      <li class="user-sidebar__nav-li">
-        <router-link :to="{ name: 'tags' }">
-          <i class="mdi mdi-tag user-sidebar__icon" />
-          <span>{{ "user-sidebar.link-tags" | globalize }}</span>
-        </router-link>
-      </li>
     </nav>
 
     <nav class="user-sidebar__nav">
