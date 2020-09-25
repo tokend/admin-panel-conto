@@ -2,18 +2,18 @@
   <div class="tags-manager">
     <div class="tags-manager__form">
       <input-field
-        v-model="form.tagName"
+        v-model="tagName"
         :placeholder="'tags-manager.add-tag-input-placeholder' | globalize"
         :disabled="isPending"
         class="tags-manager__input"
-        @blur="touchField('form.tagName')"
-        :error-message="getFieldErrorMessage('form.tagName', {
+        @blur="touchField('tagName')"
+        :error-message="getFieldErrorMessage('tagName', {
           maxLength: TAG_NAME_MAX_LENGTH
         })"
       />
       <button
         class="app__btn tags-manager__btn"
-        @click="addTag(form.tagName)"
+        @click="addTag(tagName)"
       >
         {{ "tags-manager.btn-add-tag" | globalize }}
       </button>
@@ -88,19 +88,15 @@ export default {
     isLoaded: true,
     isPending: false,
     list: [],
-    form: {
-      tagName: '',
-    },
+    tagName: '',
     TAG_NAME_MAX_LENGTH,
   }),
 
   validations () {
     return {
-      form: {
-        tagName: {
-          required,
-          maxLength: maxLength(TAG_NAME_MAX_LENGTH),
-        },
+      tagName: {
+        required,
+        maxLength: maxLength(TAG_NAME_MAX_LENGTH),
       },
     }
   },
@@ -142,7 +138,8 @@ export default {
             },
           },
         }
-        this.form.tagName = ''
+        this.tagName = ''
+
         await api.postWithSignature('/integrations/marketplace/tags', query)
         this.reloadCollectionLoader()
       } catch (e) {
