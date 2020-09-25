@@ -553,8 +553,8 @@
       "more-then-min-value": "This field should be more or equal {{minValue}}",
       "less-then-max-value": "This field should be less or equal {{maxValue}}",
       "no-more-then-avaible-issuance": "Not enough assets for issuance. Available: {{available}}",
-      "more-then-min-length": "This field should have at least {{minLength}} symbols",
-      "less-then-max-length": "This field cannot have more than {{maxLength}} symbols",
+      "more-than-min-length": "This field should have at least {{minLength}} symbols",
+      "less-than-max-length": "This field cannot have more than {{maxLength}} symbols",
       "invalid-seed": "Invalid seed",
       "min-size-password": "Use at least 8 characters for password",
       "passwords-not-match": "Passwords do not match",
@@ -1128,7 +1128,10 @@
     },
     "tags-manager": {
       "add-tag-input-placeholder": "Tag name",
-      "btn-add-tag": "Add Tag"
+      "btn-add-tag": "Add Tag",
+      "name": "Name",
+      "nothing-here-yet": "Nothing here yet",
+      "loading": "Loading..."
     },
     "tags-list-row": {
       "btn-delete": "Delete"

@@ -4,9 +4,13 @@
       <input-field
         v-model="form.tagName"
         :placeholder="'tags-manager.add-tag-input-placeholder' | globalize"
+        :disabled="isPending"
         class="tags-manager__input"
+        @blur="touchField('form.tagName')"
+        :error-message="getFieldErrorMessage('form.tagName', {
+          maxLength: TAG_NAME_MAX_LENGTH
+        })"
       />
-      <!-- :disabled="isPending" -->
       <button
         class="app__btn tags-manager__btn"
         @click="addTag(form.tagName)"
@@ -14,12 +18,12 @@
         {{ "tags-manager.btn-add-tag" | globalize }}
       </button>
     </div>
-    <div class="sale-list__list-wrp">
+    <div class="tags-manager__list-wrp">
       <template v-if="list && list.length">
         <ul class="app-list">
           <div class="app-list__header">
             <span class="app-list__cell">
-              {{ "sale-list.name" | globalize }}
+              {{ "tags-manager.name" | globalize }}
             </span>
           </div>
           <tags-list-row
@@ -36,10 +40,10 @@
         <ul class="app-list">
           <li class="app-list__li-like">
             <template v-if="isLoaded">
-              {{ "sale-list.nothing-here-yet" | globalize }}
+              {{ "tags-manager.nothing-here-yet" | globalize }}
             </template>
             <template v-else>
-              {{ "sale-list.loading" | globalize }}
+              {{ "tags-manager.loading" | globalize }}
             </template>
           </li>
         </ul>
@@ -61,8 +65,13 @@ import { CollectionLoader } from '@/components/common'
 import { InputField } from '@comcom/fields'
 import TagsListRow from '@/components/User/Tags/components/TagsListRow'
 
+import FormMixin from '@/mixins/form.mixin'
+
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { required, maxLength } from '@/validators'
+
+const TAG_NAME_MAX_LENGTH = 64
 
 export default {
   name: 'tags-manager',
@@ -73,13 +82,28 @@ export default {
     TagsListRow,
   },
 
+  mixins: [ FormMixin ],
+
   data: _ => ({
     isLoaded: true,
+    isPending: false,
     list: [],
     form: {
       tagName: '',
     },
+    TAG_NAME_MAX_LENGTH,
   }),
+
+  validations () {
+    return {
+      form: {
+        tagName: {
+          required,
+          maxLength: maxLength(TAG_NAME_MAX_LENGTH),
+        },
+      },
+    }
+  },
 
   methods: {
     async getList () {
@@ -108,17 +132,24 @@ export default {
     },
 
     async addTag (tagName) {
-      const query = {
-        data: {
-          type: 'tags',
-          attributes: {
-            name: tagName,
+      this.isPending = true
+      try {
+        const query = {
+          data: {
+            type: 'tags',
+            attributes: {
+              name: tagName,
+            },
           },
-        },
+        }
+        this.form.tagName = ''
+        await api.postWithSignature('/integrations/marketplace/tags', query)
+        this.reloadCollectionLoader()
+      } catch (e) {
+        ErrorHandler.processWithoutFeedback(e)
       }
-      this.form.tagName = ''
-      await api.postWithSignature('/integrations/marketplace/tags', query)
-      this.reloadCollectionLoader()
+
+      this.isPending = false
     },
   },
 }

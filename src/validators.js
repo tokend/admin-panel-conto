@@ -3,7 +3,7 @@ import { base } from '@tokend/js-sdk'
 
 export const password = value => validators.minLength(8)(value)
 export const seed = value => base.Keypair.isValidSecretKey(value)
-
+export const never = () => false
 export const accountId = value => {
   return base.Keypair.isValidPublicKey(value)
 }

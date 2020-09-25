@@ -2,12 +2,12 @@
   <li
     class="app-list__li tags-list-row"
   >
-    <span
+    <p
       class="app-list__cell tags-list-row__name"
       :title="name"
     >
       {{ name }}
-    </span>
+    </p>
     <div class="tags-list-row__btn-wrp">
       <button
         :disabled="isPending"
@@ -57,8 +57,9 @@ export default {
 <style lang="scss" scoped>
 
 .tags-list-row__btn-wrp {
-  padding: 1rem 1.5rem 1.5rem;
-  width: 23rem;
+  margin: auto;
+  width: 21.5rem;
+  padding-right: 1.5rem;
 }
 
 .tags-list-row__btn {
