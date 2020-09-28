@@ -85,7 +85,7 @@ export default {
   mixins: [ FormMixin ],
 
   data: _ => ({
-    isLoaded: true,
+    isLoaded: false,
     isPending: false,
     list: [],
     tagName: '',
