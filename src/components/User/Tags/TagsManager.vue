@@ -1,5 +1,6 @@
 <template>
-  <div class="tags-manager">
+  <div class="tags-manager app__user-container">
+    <h2>{{ "tags-manager.header" | globalize }}</h2>
     <template v-if="isLoaded">
       <template v-if="isLoadFailed">
         <p class="app__block danger tags-manager__error-message">
@@ -158,7 +159,7 @@ export default {
         await api.postWithSignature('/integrations/marketplace/tags', query)
         this.reloadCollectionLoader()
       } catch (e) {
-        ErrorHandler.processWithoutFeedback(e)
+        ErrorHandler.process(e)
       }
 
       this.clearFields()

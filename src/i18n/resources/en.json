@@ -1123,16 +1123,14 @@
     "tags": {
       "link-tags": "Tags"
     },
-    "tags-index": {
-      "header": "Manage tags"
-    },
     "tags-manager": {
       "add-tag-input-placeholder": "Tag name",
       "btn-add-tag": "Add Tag",
       "name": "Name",
       "nothing-here-yet": "Nothing here yet",
       "loading": "Loading...",
-      "loading-error-msg": "There was an error on load"
+      "loading-error-msg": "There was an error on load",
+      "header": "Manage tags"
     },
     "tags-list-row": {
       "btn-delete": "Delete"

@@ -5,10 +5,7 @@
         {{ "tags.link-tags" | globalize }}
       </router-link>
     </user-header>
-    <div class="app__user-container">
-      <h2>{{ "tags-index.header" | globalize }}</h2>
-      <tags-manager />
-    </div>
+    <tags-manager />
   </div>
 </template>
 

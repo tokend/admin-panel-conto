@@ -46,7 +46,7 @@ export default {
         await api.deleteWithSignature(`/integrations/marketplace/tags/${tagId}`)
         this.$emit(EVENTS.updateList)
       } catch (e) {
-        ErrorHandler.processWithoutFeedback(e)
+        ErrorHandler.process(e)
       }
       this.isPending = false
     },
