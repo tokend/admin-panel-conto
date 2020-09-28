@@ -148,16 +148,14 @@ export default {
       this.disableForm()
 
       try {
-        const query = {
+        await api.postWithSignature('/integrations/marketplace/tags', {
           data: {
             type: 'tags',
             attributes: {
               name: this.form.tagName,
             },
           },
-        }
-
-        await api.postWithSignature('/integrations/marketplace/tags', query)
+        })
         this.reloadCollectionLoader()
       } catch (e) {
         ErrorHandler.process(e)
