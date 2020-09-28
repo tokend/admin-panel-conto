@@ -4,15 +4,15 @@
   >
     <p
       class="app-list__cell tags-list-row__name"
-      :title="name"
+      :title="tag.name"
     >
-      {{ name }}
+      {{ tag.name }}
     </p>
     <div class="tags-list-row__btn-wrp">
       <button
         :disabled="isPending"
         class="app__btn tags-list-row__btn"
-        @click="deleteTag(id)"
+        @click="deleteTag(tag.id)"
       >
         {{ "tags-list-row.btn-delete" | globalize }}
       </button>
@@ -23,6 +23,7 @@
 <script>
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
+import { TagRecord } from '@/js/records/tag.record'
 
 const EVENTS = {
   updateList: 'update-list',
@@ -31,8 +32,7 @@ export default {
   name: 'tags-list-row',
 
   props: {
-    id: { type: [Number, String], required: true },
-    name: { type: String, required: true },
+    tag: { type: TagRecord, required: true },
   },
 
   data: _ => ({

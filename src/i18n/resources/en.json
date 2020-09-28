@@ -1131,7 +1131,8 @@
       "btn-add-tag": "Add Tag",
       "name": "Name",
       "nothing-here-yet": "Nothing here yet",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "loading-error-msg": "There was an error on load"
     },
     "tags-list-row": {
       "btn-delete": "Delete"
