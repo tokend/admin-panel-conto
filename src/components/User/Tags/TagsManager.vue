@@ -79,6 +79,7 @@ import TagsListRow from '@/components/User/Tags/components/TagsListRow'
 
 import FormMixin from '@/mixins/form.mixin'
 
+import { TagRecord } from '@/js/records/tag.record'
 import { api } from '@/api'
 import { ErrorHandler } from '@/utils/ErrorHandler'
 import { required, maxLength } from '@/validators'
@@ -132,11 +133,11 @@ export default {
     },
 
     setList (data) {
-      this.list = data
+      this.list = data.map(i => new TagRecord(i))
     },
 
     extendList (data) {
-      this.list = this.list.concat(data)
+      this.list = this.list.concat(data.map(i => new TagRecord(i)))
     },
 
     reloadCollectionLoader () {
