@@ -1,23 +1,21 @@
 <template>
   <div class="users">
     <user-header>
-      <router-link :to="{ name: 'tags' }" slot="nav">
+      <router-link :to="{ name: 'tags.manager' }" slot="nav">
         {{ "tags.link-tags" | globalize }}
       </router-link>
     </user-header>
-    <tags-manager />
+    <router-view />
   </div>
 </template>
 
 <script>
 import UserHeader from '@/components/User/components/UserHeader'
-import TagsManager from './TagsManager'
 
 export default {
   name: 'tags',
   components: {
     UserHeader,
-    TagsManager,
   },
 }
 </script>
