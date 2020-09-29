@@ -145,6 +145,7 @@ export default {
     },
 
     async addTag () {
+      if (!this.isFormValid()) return
       this.disableForm()
 
       try {
