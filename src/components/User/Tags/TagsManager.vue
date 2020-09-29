@@ -3,9 +3,11 @@
     <h2>{{ "tags-manager.header" | globalize }}</h2>
     <template v-if="isLoaded">
       <template v-if="isLoadFailed">
-        <p class="app__block danger tags-manager__error-message">
-          {{ 'tags-manager.loading-error-msg' | globalize }}
-        </p>
+        <div class="app__block">
+          <p class="danger tags-manager__error-message">
+            {{ 'tags-manager.loading-error-msg' | globalize }}
+          </p>
+        </div>
       </template>
       <template v-else>
         <div class="tags-manager__form">
@@ -47,9 +49,7 @@
           <template v-else>
             <ul class="app-list">
               <li class="app-list__li-like">
-                <template>
-                  {{ "tags-manager.nothing-here-yet" | globalize }}
-                </template>
+                {{ "tags-manager.nothing-here-yet" | globalize }}
               </li>
             </ul>
           </template>
@@ -57,16 +57,18 @@
       </template>
     </template>
     <template v-else>
-      <p class="app__block tags-manager__loader">
-        {{ "tags-manager.loading" | globalize }}
-      </p>
+      <div class="app__block">
+        <p class="tags-manager__loader">
+          {{ "tags-manager.loading" | globalize }}
+        </p>
+      </div>
     </template>
     <div class="app__more-btn-wrp">
       <collection-loader
         :first-page-loader="getList"
         @first-page-load="setList"
         @next-page-load="extendList"
-        ref="collectionLoaderBtn"
+        ref="collectionLoader"
       />
     </div>
   </div>
@@ -74,7 +76,6 @@
 
 <script>
 import { CollectionLoader } from '@/components/common'
-import { InputField } from '@comcom/fields'
 import TagsListRow from '@/components/User/Tags/components/TagsListRow'
 
 import FormMixin from '@/mixins/form.mixin'
@@ -91,7 +92,6 @@ export default {
 
   components: {
     CollectionLoader,
-    InputField,
     TagsListRow,
   },
 
@@ -141,7 +141,7 @@ export default {
     },
 
     reloadCollectionLoader () {
-      this.$refs.collectionLoaderBtn.loadFirstPage()
+      this.$refs.collectionLoader.loadFirstPage()
     },
 
     async addTag () {

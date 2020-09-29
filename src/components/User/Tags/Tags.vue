@@ -1,5 +1,5 @@
 <template>
-  <div class="users">
+  <div>
     <user-header>
       <router-link :to="{ name: 'tags.manager' }" slot="nav">
         {{ "tags.link-tags" | globalize }}
