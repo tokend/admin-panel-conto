@@ -529,5 +529,23 @@ export const UserRoutes = {
         require(['../../components/settings/GAuth.vue'], resolve)
       },
     },
+
+    {
+      path: '/tags',
+      name: 'tags',
+      redirect: { name: 'tags.manager' },
+      component: function (resolve) {
+        require(['../../components/User/Tags/Tags.vue'], resolve)
+      },
+      children: [
+        {
+          path: '/tags/manager',
+          name: 'tags.manager',
+          component: function (resolve) {
+            require(['../../components/User/Tags/TagsManager.vue'], resolve)
+          },
+        },
+      ],
+    },
   ],
 }

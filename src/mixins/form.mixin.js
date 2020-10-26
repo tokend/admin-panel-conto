@@ -24,8 +24,8 @@ const VALIDATION_ERRORS = {
   minValue: _template('mixin.more-then-min-value'),
   maxValue: _template('mixin.less-then-max-value'),
   noMoreThanAvailableForIssuance: _template('mixin.no-more-then-avaible-issuance'),
-  minLength: _template('mixin.more-then-min-length'),
-  maxLength: _template('mixin.less-then-max-length'),
+  minLength: _template('mixin.more-than-min-length'),
+  maxLength: _template('mixin.less-than-max-length'),
   seed: _template('mixin.invalid-seed'),
   password: _template('mixin.min-size-password'),
   sameAsPassword: _template('mixin.passwords-not-match'),
@@ -114,7 +114,7 @@ export default {
 
       for (const rule of Object.keys(fieldDetails.$params)) {
         if (!fieldDetails[rule]) {
-          return globalize(VALIDATION_ERRORS[rule](params))
+          return globalize(VALIDATION_ERRORS[rule](), params)
         }
       }
     },

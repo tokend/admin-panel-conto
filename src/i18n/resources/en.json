@@ -553,8 +553,8 @@
       "more-then-min-value": "This field should be more or equal {{minValue}}",
       "less-then-max-value": "This field should be less or equal {{maxValue}}",
       "no-more-then-avaible-issuance": "Not enough assets for issuance. Available: {{available}}",
-      "more-then-min-length": "This field should have at least {{minLength}} symbols",
-      "less-then-max-length": "This field cannot have more than {{maxLength}} symbols",
+      "more-than-min-length": "This field should have at least {{minLength}} symbols",
+      "less-than-max-length": "This field cannot have more than {{maxLength}} symbols",
       "invalid-seed": "Invalid seed",
       "min-size-password": "Use at least 8 characters for password",
       "passwords-not-match": "Passwords do not match",
@@ -1001,6 +1001,7 @@
       "link-trades": "Trades",
       "link-fees": "Fees",
       "link-key-value": "Key Value",
+      "link-tags": "Tags",
       "link-settings": "Settings"
     },
     "collected-fees-list": {
@@ -1118,6 +1119,21 @@
       "placeholder-new-value": "Enter new value",
       "placeholder-new-key": "Enter new key",
       "submitted-successfully": "Submitted successfully."
+    },
+    "tags": {
+      "link-tags": "Tags"
+    },
+    "tags-manager": {
+      "add-tag-input-placeholder": "Tag name",
+      "btn-add-tag": "Add Tag",
+      "name": "Name",
+      "nothing-here-yet": "Nothing here yet",
+      "loading": "Loading...",
+      "loading-error-msg": "There was an error on load",
+      "header": "Manage tags"
+    },
+    "tags-list-row": {
+      "btn-delete": "Delete"
     },
     "kyc-recovery-request-action": {
       "btn-approve": "Approve",
