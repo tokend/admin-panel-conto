@@ -24,7 +24,7 @@
           <button
             class="app__btn tags-manager__btn"
             :disabled="formMixin.isDisabled"
-            @click="addTag()"
+            @click="addTag"
           >
             {{ "tags-manager.btn-add-tag" | globalize }}
           </button>

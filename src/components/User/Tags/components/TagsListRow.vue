@@ -12,7 +12,7 @@
       <button
         :disabled="isPending"
         class="app__btn tags-list-row__btn"
-        @click="deleteTag(tag.id)"
+        @click="deleteTag"
       >
         {{ "tags-list-row.btn-delete" | globalize }}
       </button>
@@ -40,10 +40,10 @@ export default {
   }),
 
   methods: {
-    async deleteTag (tagId) {
+    async deleteTag () {
       this.isPending = true
       try {
-        await api.deleteWithSignature(`/integrations/marketplace/tags/${tagId}`)
+        await api.deleteWithSignature(`/integrations/marketplace/tags/${this.tag.id}`)
         this.$emit(EVENTS.updateList)
       } catch (e) {
         ErrorHandler.process(e)
